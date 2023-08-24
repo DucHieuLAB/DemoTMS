@@ -1,0 +1,37 @@
+buildscript {
+    repositories { mavenCentral() }
+}
+
+plugins {
+    id "io.spring.dependency-management"
+}
+
+ext { springBootVersion = '2.5.5' }
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+project.archivesBaseName = 'dao-lib'
+project.version = '1.0'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.5'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+    implementation group: 'com.googlecode.jcsv', name: 'jcsv', version: '1.4.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+}
+
+dependencyManagement {
+    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+}

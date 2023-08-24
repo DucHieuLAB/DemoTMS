@@ -1,0 +1,89 @@
+{
+  "properties": [
+    {
+      "name": "app.datasource.url",
+      "type": "java.lang.String",
+      "description": "Description for url of datasource."
+    },
+    {
+      "name": "app.datasource.username",
+      "type": "java.lang.String",
+      "description": "Description for username of datasource."
+    },
+    {
+      "name": "app.datasource.password",
+      "type": "java.lang.String",
+      "description": "Description password of datasource."
+    },
+    {
+      "name": "app.datasource.hikari-config.pool-name",
+      "type": "java.lang.String",
+      "description": "Description for pool name of hikari."
+    },
+    {
+      "name": "app.datasource.hikari-config.maximum-pool-size",
+      "type": "java.lang.Integer",
+      "description": "Description for maximum pool size of hikari."
+    },
+    {
+      "name": "app.datasource.hikari-config.minimum-idle",
+      "type": "java.lang.Integer",
+      "description": "Description for minimum idle of hikari."
+    },
+    {
+      "name": "inmemory.datasource.jdbcUrl",
+      "type": "java.lang.String",
+      "description": "Description for inmemory.datasource.jdbcUrl."
+    },
+    {
+      "name": "inmemory.datasource.username",
+      "type": "java.lang.String",
+      "description": "Description for inmemory.datasource.username."
+    },
+    {
+      "name": "inmemory.datasource.password",
+      "type": "java.lang.String",
+      "description": "Description for inmemory.datasource.password."
+    },
+    {
+      "name": "inmemory.datasource.pool-name",
+      "type": "java.lang.String",
+      "description": "Description for inmemory.datasource.pool-name."
+    },
+    {
+      "name": "inmemory.datasource.maximum-pool-size",
+      "type": "java.lang.Integer",
+      "description": "Description for inmemory.datasource.maximum-pool-size."
+    },
+    {
+      "name": "inmemory.datasource.minimum-idle",
+      "type": "java.lang.Integer",
+      "description": "Description for inmemory.datasource.minimum-idle."
+    },
+    {
+      "name": "db-configs.file-path",
+      "type": "java.lang.String",
+      "description": "Description for db-configs.file-path."
+    },
+    {
+      "name": "db-configs.configs",
+      "type": "java.lang.Object",
+      "description": "Description for db-configs.configs."
+    },
+    {
+      "name": "spring.redis.server",
+      "type": "java.lang.String",
+      "description": "Description for spring.redis.server."
+    },
+    {
+      "name": "config.org-id",
+      "type": "java.lang.String",
+      "description": "Description for config.org-id."
+    },
+    {
+      "name": "config.is-run-db-log",
+      "type": "java.lang.String",
+      "description": "Description for config.is-run-db-log."
+    }
+  ]
+}

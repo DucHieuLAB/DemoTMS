@@ -1,0 +1,13 @@
+db-configs:
+  file-path: data/bak
+  configs:
+#    BEGIN SCHEDULE UPDATE
+    - func-name: "get_schedule_update"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
+    - func-name: "ins_schedule_update"
+      always-write-file: false
+    - func-name: "upd_schedule_update"
+      always-write-file: false
+#   END SCHEDULE UPDATE
