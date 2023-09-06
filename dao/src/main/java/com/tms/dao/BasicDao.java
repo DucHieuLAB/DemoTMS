@@ -103,7 +103,6 @@ public class BasicDao {
 
         SqlParameterSource in = AppUtils.ob2SqlSource(params);
         Map<String, Object> map = simpleJdbcCall.execute(in);
-
         DBResponse<String> result = new DBResponse<>(DBResponse.DB_CONN_TYPE_DB);
         result.setErrorMsg((String) map.get(OUT_FAIL_MESSAGE));
         result.setErrorCode((Integer) map.get(OUT_STATUS));

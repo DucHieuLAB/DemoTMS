@@ -11,7 +11,6 @@ public class EnumType {
         SUCCESS(0),
         FAIL(1),
         ;
-
         private final int status;
     }
     @Getter

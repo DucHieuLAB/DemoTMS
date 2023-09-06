@@ -34,6 +34,9 @@ public class DateHelper {
     }
 
     public static String toDateTime(LocalDateTime localDateTime) {
+        if(localDateTime == null){
+            return null;
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME);
         return localDateTime.format(formatter);
     }
@@ -54,6 +57,9 @@ public class DateHelper {
     }
 
     public static String toDbDateTime(LocalDateTime localDateTime) {
+        if(localDateTime == null){
+            return null;
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DB_DATE_TIME);
         return localDateTime.format(formatter);
     }
