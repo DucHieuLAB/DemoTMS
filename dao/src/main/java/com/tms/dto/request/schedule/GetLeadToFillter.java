@@ -12,5 +12,6 @@ import org.springframework.stereotype.Service;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GetLeadToFillter {
 
-    private String in_attribute3;
+    private String inAttribute3;
+
 }
