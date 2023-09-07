@@ -1,4 +1,4 @@
-package com.tms.dto.request.lead;
+package com.tms.dto.request.clBasket;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

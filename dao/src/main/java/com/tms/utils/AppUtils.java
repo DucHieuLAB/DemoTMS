@@ -97,7 +97,7 @@ public final class AppUtils {
                     if (f.getType().isAssignableFrom(Integer.class)) {
                         sqlParameter = new SqlParameter(reName, Types.INTEGER);
                     } else if (f.getType().isAssignableFrom(String.class) && (name.equals("attribute") || name.equals("jsonLog")
-                            || name.equals("packageListItem") || name.equals("chatId") || name.equals("pbAll") || name.equals("requestJson") || name.equals("responseJson"))) {
+                            || name.equals("packageListItem") || name.equals("chatId") || name.equals("pbAll") || name.equals("requestJson") || name.equals("responseJson") || name.equals("json"))) {
                         sqlParameter = new SqlParameter(reName, Types.OTHER);
                     } else if (f.getType().isAssignableFrom(String.class)) {
                         sqlParameter = new SqlParameter(reName, Types.VARCHAR);
@@ -105,8 +105,6 @@ public final class AppUtils {
                         sqlParameter = new SqlParameter(reName, Types.NUMERIC);
                     } else if (f.getType().isAssignableFrom(Boolean.class)) {
                         sqlParameter = new SqlParameter(reName, Types.BOOLEAN);
-                    } else if (f.getType().isAssignableFrom(Integer[].class) || f.getType().isAssignableFrom(List.class)){
-                        sqlParameter = new SqlParameter(reName, Types.ARRAY);
                     }
                     if (sqlParameter != null) {
                         inParams.add(sqlParameter);

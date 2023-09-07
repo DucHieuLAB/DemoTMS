@@ -1,9 +1,13 @@
 package com.tms.dto.request.blacklist;
 
 import com.tms.DaoConst;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.Pattern;
 
+@Getter
+@Setter
 public class GetBlackList {
     private Integer blId;
     private Integer orgId;

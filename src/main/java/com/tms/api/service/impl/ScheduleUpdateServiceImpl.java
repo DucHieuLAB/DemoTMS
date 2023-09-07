@@ -1,7 +1,6 @@
 package com.tms.api.service.impl;
 
 import com.tms.api.commons.ApiMessageError;
-import com.tms.api.commons.ApiValidatorError;
 import com.tms.api.consts.EnumType.DbStatusResp;
 import com.tms.api.consts.MessageConst;
 import com.tms.api.exception.*;
@@ -31,7 +30,6 @@ public class ScheduleUpdateServiceImpl extends BaseService implements ScheduleUp
     public ScheduleUpdate getScheduleUpdateById(int id) {
         return new ScheduleUpdate();
     }
-
     @Override
     public List<ScheduleUpdate> getScheduleUpdate(GetScheduleUpdate getScheduleUpdate) throws TMSException {
         DBResponse<List<ScheduleUpdate>> getScheduleDbResp = cfScheduleUpdateService.getScheduleUpdate(sessionId, getScheduleUpdate);
@@ -44,7 +42,6 @@ public class ScheduleUpdateServiceImpl extends BaseService implements ScheduleUp
         }
         return getScheduleDbResp.getResult();
     }
-
     @Override
     public boolean insScheduleUpdate(InsScheduleUpdate insScheduleUpdate) throws TMSDbException {
         insScheduleUpdate.setCreatedBy(curUserId);
@@ -54,7 +51,6 @@ public class ScheduleUpdateServiceImpl extends BaseService implements ScheduleUp
         }
         return true;
     }
-
     @Override
     public boolean updScheduleUpdate(int scheduleId, UpdScheduleUpdate updScheduleUpdate) throws TMSException {
         updScheduleUpdate.setModifiedBy(curUserId);

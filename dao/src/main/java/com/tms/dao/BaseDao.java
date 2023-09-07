@@ -70,10 +70,8 @@ public abstract class BaseDao {
             CompletableFuture<DBResponse<T>> secondFutureTask = CompletableFuture.supplyAsync(fallbackTask, executor);
             result = waitAndGetResult(sessionId, secondFutureTask, fallbackTask.type(), remainTimeout);
         }
-
         return result;
     }
-
     private <T> DBResponse<T> waitAndGetResult(String sessionId, CompletableFuture<DBResponse<T>> task, String type, long timeout) {
         DBResponse<T> result = null;
         try {
@@ -100,7 +98,6 @@ public abstract class BaseDao {
             return DBResponse.qConfigError(sessionId, e.getMessage());
         }
     }
-
     protected <T> DBResponse<T> insert(String sessionId, DBConfig config,
                                        Supplier<DBResponse<T>> fileTask, Supplier<DBResponse<T>> dbTask) {
         try {

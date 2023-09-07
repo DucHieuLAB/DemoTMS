@@ -1,42 +1,48 @@
-package com.tms.dto.request.lead;
+package com.tms.dto.request.clBasket;
 
+import com.tms.DaoConst;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClBasket {
-    private int leadId;
-    private int agcId;
+public class UpdClBasket {
+    @NotNull
+    private Integer leadId;
+    private Integer agcId;
     private String agcCode;
-    private int orgId;
+    private Integer orgId;
     private String ccCode;
     private String name;
     private String phone;
-    private int prodId;
+    private Integer prodId;
     private String prodName;
     private String address;
     private String province;
     private String district;
     private String subdistrict;
     private String comment;
-    private Timestamp createDate;
-    private Timestamp modifyDate;
-    private int modifyBy;
-    private int status;
+    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date.Pattern.message}")
+    private String in_createdate;
+    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date.Pattern.message}")
+    private String modifydate;
+    private Integer modifyby;
+    private Integer status;
     private String email;
     private String quantity;
     private String clickId;
     private String agKey;
-    private String attribute1;
-    private String attribute2;
-    private String attribute3;
+    private String in_attribute1;
+    private String in_attribute2;
+    private String in_attribute3;
     private String amount;
     private String offerId;
     private String agcOfferId;
@@ -53,15 +59,16 @@ public class ClBasket {
     private String trackingUrlId;
     private String subid1;
     private String subid2;
-    private int customerAge;
+    private Integer customerAge;
     private String customerEmail;
     private String customerComment;
-    private String in_agc_offer_id;
-    private Timestamp create_date;
+    private String agcoffer_id;
+    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date.Pattern.message}")
+    private String createDate;
     private String linkClickId;
     private String duplicateMainLead;
     private String leadIp;
-    private int duplicateTime;
-    private int trackerId;
+    private Integer duplicateTime;
+    private Integer trackerId;
     private String ipAddress;
 }
