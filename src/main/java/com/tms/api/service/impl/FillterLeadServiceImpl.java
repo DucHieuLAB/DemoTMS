@@ -38,7 +38,7 @@ public class FillterLeadServiceImpl extends BaseService implements FillterLeadSe
 
     @Override
     public Boolean updLeadFillter(UpdLeadFillter updLeadFillter) throws TMSException {
-        updLeadFillter.setModifiedBy(curUserId);
+        updLeadFillter.setModifyby(curUserId);
         DBResponse<String> insLeadResp = dao.updLeadFillter(sessionId, updLeadFillter);
         if (insLeadResp.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(insLeadResp.getErrorMsg());
