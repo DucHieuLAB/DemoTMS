@@ -105,7 +105,7 @@ public final class AppUtils {
                         sqlParameter = new SqlParameter(reName, Types.NUMERIC);
                     } else if (f.getType().isAssignableFrom(Boolean.class)) {
                         sqlParameter = new SqlParameter(reName, Types.BOOLEAN);
-                    } else if (f.getType().isAssignableFrom(Integer[].class)){
+                    } else if (f.getType().isAssignableFrom(Integer[].class) || f.getType().isAssignableFrom(List.class)){
                         sqlParameter = new SqlParameter(reName, Types.ARRAY);
                     }
                     if (sqlParameter != null) {

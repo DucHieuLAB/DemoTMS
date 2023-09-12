@@ -5,9 +5,11 @@ import com.tms.api.exception.TMSDbException;
 import com.tms.api.exception.TMSException;
 import com.tms.api.service.BaseService;
 import com.tms.commons.DBResponse;
-import com.tms.dao.ClBasketFillterDao;
-import com.tms.dto.request.schedule.GetLeadToFillter;
-import com.tms.dto.request.schedule.UpdLeadFillter;
+import com.tms.dao.LeadFillterDao;
+import com.tms.dto.request.lead.GetLeadToFillter;
+import com.tms.dto.request.lead.InsLeadAfterFillter;
+import com.tms.dto.request.lead.InsListLeadAfterFillter;
+import com.tms.dto.request.lead.UpdLeadFillter;
 import com.tms.dto.response.LeadBasket;
 import com.tms.api.service.FillterLeadService;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,9 @@ import java.util.List;
 
 @Service
 public class FillterLeadServiceImpl extends BaseService implements FillterLeadService {
-    private final  ClBasketFillterDao dao;
+    private final LeadFillterDao dao;
 
-    public FillterLeadServiceImpl(ClBasketFillterDao fillterLeadImpl) {
+    public FillterLeadServiceImpl(LeadFillterDao fillterLeadImpl) {
         this.dao = fillterLeadImpl;
     }
 
@@ -42,6 +44,15 @@ public class FillterLeadServiceImpl extends BaseService implements FillterLeadSe
         DBResponse<String> insLeadResp = dao.updLeadFillter(sessionId, updLeadFillter);
         if (insLeadResp.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(insLeadResp.getErrorMsg());
+        }
+        return true;
+    }
+
+    @Override
+    public boolean insLeadAfterFillter(List<InsLeadAfterFillter> insLeadAfterFillter) throws TMSDbException {
+        DBResponse<String> insLeadAfterFillterDbResp = dao.insLeadAfterFillter(sessionId,insLeadAfterFillter);
+        if(insLeadAfterFillterDbResp.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
+            throw  new TMSDbException(insLeadAfterFillterDbResp.getErrorMsg());
         }
         return true;
     }

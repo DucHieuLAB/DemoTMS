@@ -16,4 +16,5 @@ public class LeadBasket implements Serializable {
     private LocalDateTime createDate;
     private Integer status;
     private String attribute3;
+    private String comment;
 }
