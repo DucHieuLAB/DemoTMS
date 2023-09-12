@@ -1,4 +1,4 @@
-package com.tms.dto.request.schedule;
+package com.tms.dto.request.lead;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.tms.DaoConst;

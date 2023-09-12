@@ -1,17 +1,14 @@
-package com.tms.dto.request.schedule;
+package com.tms.dto.request.lead;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+
 
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GetLeadToFillter {
-
     private String inAttribute3;
-
 }
