@@ -7,8 +7,7 @@ import com.tms.api.service.BaseService;
 import com.tms.commons.DBResponse;
 import com.tms.dao.LeadFillterDao;
 import com.tms.dto.request.lead.GetLeadToFillter;
-import com.tms.dto.request.lead.InsLeadAfterFillter;
-import com.tms.dto.request.lead.InsListLeadAfterFillter;
+import com.tms.dto.request.lead.ClFresh;
 import com.tms.dto.request.lead.UpdLeadFillter;
 import com.tms.dto.response.LeadBasket;
 import com.tms.api.service.FillterLeadService;
@@ -22,14 +21,6 @@ public class FillterLeadServiceImpl extends BaseService implements FillterLeadSe
 
     public FillterLeadServiceImpl(LeadFillterDao fillterLeadImpl) {
         this.dao = fillterLeadImpl;
-    }
-
-    @Override
-    public void fillterLead() {
-        GetLeadToFillter getLeadToFillter = new GetLeadToFillter();
-        getLeadToFillter.setInAttribute3("0");
-        List<LeadBasket> basketList = getListToFillter(getLeadToFillter);
-        // [To do]
     }
 
     @Override
@@ -49,8 +40,8 @@ public class FillterLeadServiceImpl extends BaseService implements FillterLeadSe
     }
 
     @Override
-    public boolean insLeadAfterFillter(List<InsLeadAfterFillter> insLeadAfterFillter) throws TMSDbException {
-        DBResponse<String> insLeadAfterFillterDbResp = dao.insLeadAfterFillter(sessionId,insLeadAfterFillter);
+    public boolean insLeadAfterFillter(List<ClFresh> CLFresh) throws TMSDbException {
+        DBResponse<String> insLeadAfterFillterDbResp = dao.insLeadAfterFillter(sessionId, CLFresh);
         if(insLeadAfterFillterDbResp.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
             throw  new TMSDbException(insLeadAfterFillterDbResp.getErrorMsg());
         }

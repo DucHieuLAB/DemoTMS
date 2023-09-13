@@ -8,5 +8,5 @@ import java.util.List;
 @Getter
 @Setter
 public class InsListLeadAfterFillter {
-    private List<InsLeadAfterFillter> insLeadAfterFillters;
+    private List<ClFresh> CLFreshes;
 }

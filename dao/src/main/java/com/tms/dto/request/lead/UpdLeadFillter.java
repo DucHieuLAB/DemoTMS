@@ -19,7 +19,11 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UpdLeadFillter {
     @NotNull
-    private Integer[] Leadids;
+    private Integer leadids;
+    private Integer agcId;
+    private String agcCode;
+    private Integer orgId;
+    private String ccCode;
     private String name;
     private String phone;
     private Integer prodId;
