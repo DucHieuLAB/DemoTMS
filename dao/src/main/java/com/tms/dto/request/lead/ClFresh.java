@@ -1,14 +1,18 @@
 package com.tms.dto.request.lead;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
 
 @Getter
 @Setter
-public class InsLeadAfterFillter {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ClFresh {
     private Integer leadId;
     private Integer agcId;
     private String agcCode;
