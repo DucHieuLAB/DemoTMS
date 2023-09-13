@@ -5,8 +5,7 @@ import com.tms.api.exception.TMSDbException;
 import com.tms.api.exception.TMSException;
 import com.tms.api.service.FillterLeadService;
 import com.tms.dto.request.lead.GetLeadToFillter;
-import com.tms.dto.request.lead.InsLeadAfterFillter;
-import com.tms.dto.request.lead.InsListLeadAfterFillter;
+import com.tms.dto.request.lead.ClFresh;
 import com.tms.dto.request.lead.UpdLeadFillter;
 import com.tms.dto.response.LeadBasket;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +29,8 @@ public class LeadFillterController {
     }
 
     @PostMapping
-    public TMSResponse<Boolean> insLeadAfterFiller(@Valid @RequestBody List<InsLeadAfterFillter> insLeadAfterFillter) throws TMSDbException {
-        boolean result = fillterLeadService.insLeadAfterFillter(insLeadAfterFillter);
+    public TMSResponse<Boolean> insLeadAfterFiller(@Valid @RequestBody List<ClFresh> CLFresh) throws TMSDbException {
+        boolean result = fillterLeadService.insLeadAfterFillter(CLFresh);
         return TMSResponse.buildResponse(result);
     }
     @PutMapping

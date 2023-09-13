@@ -1,43 +1,35 @@
 package com.tms.dto.request.lead;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import com.tms.DaoConst;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class UpdLeadFillter {
-    @NotNull
-    private Integer leadids;
-    private Integer agcId;
+public class ClBasket {
+    private int leadId;
+    private int agcId;
     private String agcCode;
-    private Integer orgId;
+    private int orgId;
     private String ccCode;
     private String name;
     private String phone;
-    private Integer prodId;
+    private int prodId;
     private String prodName;
     private String address;
     private String province;
     private String district;
     private String subdistrict;
     private String comment;
-    @Pattern(regexp = DaoConst.DATE_REGEX, message = "{date.Pattern.message}")
-    private String in_createdate;
-    @Pattern(regexp = DaoConst.DATE_REGEX, message = "{date.Pattern.message}")
-    private String modifydate;
-    private Integer modifyby;
-    private Integer status;
+    private Timestamp createDate;
+    private Timestamp modifyDate;
+    private int modifyBy;
+    private int status;
     private String email;
     private String quantity;
     private String clickId;
@@ -61,16 +53,15 @@ public class UpdLeadFillter {
     private String trackingUrlId;
     private String subid1;
     private String subid2;
-    private Integer customerAge;
+    private int customerAge;
     private String customerEmail;
     private String customerComment;
-    private String agcoffer_id;
-    @Pattern(regexp = DaoConst.DATE_REGEX, message = "{date.Pattern.message}")
-    private String createDate;
+    private String in_agc_offer_id;
+    private Timestamp create_date;
     private String linkClickId;
     private String duplicateMainLead;
     private String leadIp;
-    private Integer duplicateTime;
-    private Integer trackerId;
+    private int duplicateTime;
+    private int trackerId;
     private String ipAddress;
 }

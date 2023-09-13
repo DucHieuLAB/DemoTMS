@@ -11,3 +11,16 @@ db-configs:
     - func-name: "upd_schedule_update"
       always-write-file: false
 #   END SCHEDULE UPDATE
+#    BEGIN Fillter Lead
+    - func-name: "get_null_attribute3_rows"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
+    - func-name: "get_lead_basket_in_timerange"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
+    - func-name: "ins_cl_fresh_after_fillter"
+      always-write-file: false
+    - func-name: "update_lead_fillter"
+      always-write-file: false
