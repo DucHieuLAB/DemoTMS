@@ -86,8 +86,35 @@ public final class AppUtils {
     }
 
     public static <T> List<SqlParameter> ob2SqlInParams(T config, boolean inOut, boolean out) {
-        Field[] fields = config.getClass().getDeclaredFields();
         List<SqlParameter> inParams = new ArrayList<>();
+
+        // Check if the input is a List<Object>
+        if (config instanceof List<?>) {
+            List<?> configList = (List<?>) config;
+            for (Object obj : configList) {
+                inParams.addAll(generateParametersForObject(obj));
+            }
+        } else {
+            inParams.addAll(generateParametersForObject(config));
+        }
+
+        if (inOut) {
+            inParams.add(new SqlParameter("inout_rc_name", Types.OTHER));
+        }
+
+        if (out) {
+            inParams.add(new SqlOutParameter("out_status", Types.INTEGER));
+            inParams.add(new SqlOutParameter("out_fail_message", Types.VARCHAR));
+            inParams.add(new SqlOutParameter("out_count_row", Types.INTEGER));
+        }
+
+        return inParams;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<SqlParameter> generateParametersForObject(Object config) {
+        Field[] fields = config.getClass().getDeclaredFields();
+        List<SqlParameter> parameters = new ArrayList<>();
         for (Field f : fields) {
             String name = f.getName();
             String reName = "in_" + toRevertCamelCaseLowercase(name);
@@ -105,29 +132,18 @@ public final class AppUtils {
                         sqlParameter = new SqlParameter(reName, Types.NUMERIC);
                     } else if (f.getType().isAssignableFrom(Boolean.class)) {
                         sqlParameter = new SqlParameter(reName, Types.BOOLEAN);
-                    } else if (f.getType().isAssignableFrom(Integer[].class) || f.getType().isAssignableFrom(List.class)){
+                    } else if (f.getType().isAssignableFrom(Integer[].class) || f.getType().isAssignableFrom(List.class)) {
                         sqlParameter = new SqlParameter(reName, Types.ARRAY);
                     }
                     if (sqlParameter != null) {
-                        inParams.add(sqlParameter);
+                        parameters.add(sqlParameter);
                     }
                 } catch (Exception e) {
                     logger.info(e.getMessage(), e);
                 }
             }
         }
-
-        if (inOut) {
-            inParams.add(new SqlParameter("inout_rc_name", Types.OTHER));
-        }
-
-        if (out) {
-            inParams.add(new SqlOutParameter("out_status", Types.INTEGER));
-            inParams.add(new SqlOutParameter("out_fail_message", Types.VARCHAR));
-            inParams.add(new SqlOutParameter("out_count_row", Types.INTEGER));
-        }
-
-        return inParams;
+        return parameters;
     }
 
     public static <T> CSVEntryConverter<T> ob2Str(T config) {

@@ -7,6 +7,7 @@ import com.tms.api.service.FillterLeadService;
 import com.tms.dto.request.lead.GetLeadToFillter;
 import com.tms.dto.request.lead.ClFresh;
 import com.tms.dto.request.lead.UpdLeadFillter;
+import com.tms.dto.response.ClBaskets;
 import com.tms.dto.response.LeadBasket;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +24,8 @@ public class LeadFillterController {
     }
 
     @PostMapping("/Leads")
-    public TMSResponse<List<LeadBasket>> getLeadBasket(@Valid @RequestBody GetLeadToFillter getLeadToFillter) throws TMSException {
-        List<LeadBasket> result = fillterLeadService.getListToFillter(getLeadToFillter);
+    public TMSResponse<ClBaskets> getLeadBasket(@Valid @RequestBody GetLeadToFillter getLeadToFillter) throws TMSException {
+        ClBaskets result = fillterLeadService.getListToFillter(getLeadToFillter);
         return TMSResponse.buildResponse(result);
     }
 
@@ -34,7 +35,7 @@ public class LeadFillterController {
         return TMSResponse.buildResponse(result);
     }
     @PutMapping
-    public TMSResponse<Boolean> updateScheduleUpdate(@Valid @RequestBody UpdLeadFillter updLeadFillter) throws TMSException {
+    public TMSResponse<Boolean> updateScheduleUpdate(@Valid @RequestBody ClBaskets updLeadFillter) throws TMSException {
         Boolean result = fillterLeadService.updLeadFillter(updLeadFillter);
         return TMSResponse.buildResponse(result);
     }
