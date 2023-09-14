@@ -22,19 +22,4 @@ public class CfBlackList implements Serializable {
     private String comment;
     private Integer modifyby;
     private LocalDateTime modifydate;
-
-    @Override
-    public String toString() {
-        return "CfBlackList{" +
-                "blId=" + blId +
-                ", orgId=" + orgId +
-                ", leadId=" + leadId +
-                ", leadName='" + leadName + '\'' +
-                ", phone='" + phone + '\'' +
-                ", prodId=" + prodId +
-                ", comment='" + comment + '\'' +
-                ", modifyby=" + modifyby +
-                ", modifydate=" + modifydate +
-                '}';
-    }
 }

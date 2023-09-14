@@ -61,6 +61,10 @@ db-configs:
       q-mode: "db"
       q-timeout: [ 5, 3 ]
       q-fallback: true
+    - func-name: "get_blacklist"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
     - func-name: "get_campaign_inf"
       q-mode: "db"
       q-timeout: [ 5, 3 ]

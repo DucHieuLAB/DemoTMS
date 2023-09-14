@@ -6,6 +6,7 @@ import com.tms.api.service.FillterLeadService;
 import com.tms.dto.request.lead.GetLeadToFillter;
 import com.tms.dto.request.lead.ClFresh;
 import com.tms.dto.request.lead.UpdLeadFillter;
+import com.tms.dto.response.ClBaskets;
 import com.tms.dto.response.LeadBasket;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +34,7 @@ public class LeadFillterController {
         return TMSResponse.buildResponse(result);
     }
     @PutMapping
-    public TMSResponse<Boolean> updateScheduleUpdate(@Valid @RequestBody UpdLeadFillter updLeadFillter) throws TMSException {
+    public TMSResponse<Boolean> updateScheduleUpdate(@Valid @RequestBody ClBaskets updLeadFillter) throws TMSException {
         Boolean result = fillterLeadService.updLeadFillter(updLeadFillter);
         return TMSResponse.buildResponse(result);
     }

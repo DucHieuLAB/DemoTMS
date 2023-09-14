@@ -8,8 +8,8 @@ import com.tms.commons.DBResponse;
 import com.tms.dao.LeadFillterDao;
 import com.tms.dto.request.lead.GetLeadToFillter;
 import com.tms.dto.request.lead.ClFresh;
-import com.tms.dto.request.lead.UpdLeadFillter;
-import com.tms.dto.response.LeadBasket;
+import com.tms.dto.response.ClBasket;
+import com.tms.dto.response.ClBaskets;
 import com.tms.api.service.FillterLeadService;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +24,14 @@ public class FillterLeadServiceImpl extends BaseService implements FillterLeadSe
     }
 
     @Override
-    public List<LeadBasket> getListToFillter( GetLeadToFillter getLeadToFillter) {
-        DBResponse<List<LeadBasket>> listDBResponse = dao.getLeadUpdate(sessionId,getLeadToFillter);
-        return listDBResponse.getResult();
+    public ClBaskets getListToFillter(GetLeadToFillter getLeadToFillter) throws TMSException{
+        DBResponse<List<ClBasket>> listDBResponse = dao.getLeadUpdate(sessionId,getLeadToFillter);
+        if(listDBResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
+            throw new TMSDbException(listDBResponse.getErrorMsg());
+        }
+        ClBaskets baskets = new ClBaskets();
+        baskets.setClBaskets(listDBResponse.getResult());
+        return baskets;
     }
 
     @Override
