@@ -6,9 +6,7 @@ import com.tms.api.exception.TMSException;
 import com.tms.api.service.FillterLeadService;
 import com.tms.dto.request.lead.GetLeadToFillter;
 import com.tms.dto.request.lead.ClFresh;
-import com.tms.dto.request.lead.UpdLeadFillter;
-import com.tms.dto.response.ClBaskets;
-import com.tms.dto.response.LeadBasket;
+import com.tms.dto.response.ClBasket;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,20 +22,11 @@ public class LeadFillterController {
     }
 
     @PostMapping("/Leads")
-    public TMSResponse<ClBaskets> getLeadBasket(@Valid @RequestBody GetLeadToFillter getLeadToFillter) throws TMSException {
-        ClBaskets result = fillterLeadService.getListToFillter(getLeadToFillter);
+    public TMSResponse<List<ClBasket>> getLeadBasket(@Valid @RequestBody GetLeadToFillter getLeadToFillter) throws TMSException {
+        List<ClBasket> result = fillterLeadService.getListToFillter(getLeadToFillter);
         return TMSResponse.buildResponse(result);
     }
 
-    @PostMapping
-    public TMSResponse<Boolean> insLeadAfterFiller(@Valid @RequestBody List<ClFresh> CLFresh) throws TMSDbException {
-        boolean result = fillterLeadService.insLeadAfterFillter(CLFresh);
-        return TMSResponse.buildResponse(result);
-    }
-    @PutMapping
-    public TMSResponse<Boolean> updateScheduleUpdate(@Valid @RequestBody ClBaskets updLeadFillter) throws TMSException {
-        Boolean result = fillterLeadService.updLeadFillter(updLeadFillter);
-        return TMSResponse.buildResponse(result);
-    }
+
 
 }

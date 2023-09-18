@@ -1,7 +1,5 @@
 package com.tms.dto.request.lead;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import com.tms.DaoConst;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,14 +9,14 @@ import lombok.Setter;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class UpdLeadFillter {
+public class UpdClBasket {
     @NotNull
-    private Integer leadids;
+    private Integer leadId;
     private Integer agcId;
     private String agcCode;
     private Integer orgId;
@@ -32,9 +30,9 @@ public class UpdLeadFillter {
     private String district;
     private String subdistrict;
     private String comment;
-    @Pattern(regexp = DaoConst.DATE_REGEX, message = "{date.Pattern.message}")
+    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date.Pattern.message}")
     private String in_createdate;
-    @Pattern(regexp = DaoConst.DATE_REGEX, message = "{date.Pattern.message}")
+    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date.Pattern.message}")
     private String modifydate;
     private Integer modifyby;
     private Integer status;
@@ -42,9 +40,9 @@ public class UpdLeadFillter {
     private String quantity;
     private String clickId;
     private String agKey;
-    private String attribute1;
-    private String attribute2;
-    private String attribute3;
+    private String in_attribute1;
+    private String in_attribute2;
+    private String in_attribute3;
     private String amount;
     private String offerId;
     private String agcOfferId;
@@ -65,7 +63,7 @@ public class UpdLeadFillter {
     private String customerEmail;
     private String customerComment;
     private String agcoffer_id;
-    @Pattern(regexp = DaoConst.DATE_REGEX, message = "{date.Pattern.message}")
+    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date.Pattern.message}")
     private String createDate;
     private String linkClickId;
     private String duplicateMainLead;

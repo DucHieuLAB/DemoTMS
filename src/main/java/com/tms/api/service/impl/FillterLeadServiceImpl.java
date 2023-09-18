@@ -1,5 +1,7 @@
 package com.tms.api.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tms.api.consts.EnumType;
 import com.tms.api.exception.TMSDbException;
 import com.tms.api.exception.TMSException;
@@ -9,7 +11,6 @@ import com.tms.dao.LeadFillterDao;
 import com.tms.dto.request.lead.GetLeadToFillter;
 import com.tms.dto.request.lead.ClFresh;
 import com.tms.dto.response.ClBasket;
-import com.tms.dto.response.ClBaskets;
 import com.tms.api.service.FillterLeadService;
 import org.springframework.stereotype.Service;
 
@@ -24,33 +25,15 @@ public class FillterLeadServiceImpl extends BaseService implements FillterLeadSe
     }
 
     @Override
-    public ClBaskets getListToFillter(GetLeadToFillter getLeadToFillter) throws TMSException{
+    public List<ClBasket> getListToFillter(GetLeadToFillter getLeadToFillter) throws TMSException{
         DBResponse<List<ClBasket>> listDBResponse = dao.getLeadUpdate(sessionId,getLeadToFillter);
         if(listDBResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
             throw new TMSDbException(listDBResponse.getErrorMsg());
         }
-        ClBaskets baskets = new ClBaskets();
-        baskets.setClBaskets(listDBResponse.getResult());
-        return baskets;
+        return listDBResponse.getResult();
     }
 
-    @Override
-    public Boolean updLeadFillter(ClBaskets updLeadFillter) throws TMSException {
-        DBResponse<String> insLeadResp = dao.updClBasketAfterFillter(sessionId, updLeadFillter);
-        if (insLeadResp.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
-            throw new TMSDbException(insLeadResp.getErrorMsg());
-        }
-        return true;
-    }
-
-    @Override
-    public boolean insLeadAfterFillter(List<ClFresh> CLFresh) throws TMSDbException {
-        DBResponse<String> insLeadAfterFillterDbResp = dao.insLeadAfterFillter(sessionId, CLFresh);
-        if(insLeadAfterFillterDbResp.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
-            throw  new TMSDbException(insLeadAfterFillterDbResp.getErrorMsg());
-        }
-        return true;
-    }
+//
 
 
 }
