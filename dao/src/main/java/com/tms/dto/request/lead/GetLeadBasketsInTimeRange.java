@@ -13,4 +13,12 @@ public class GetLeadBasketsInTimeRange {
     private String startTime;
     @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date-between.Pattern.message}")
     private String endTime;
+
+    @Override
+    public String toString() {
+        return "GetLeadBasketsInTimeRange{" +
+                "startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                '}';
+    }
 }
