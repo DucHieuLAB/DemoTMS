@@ -34,6 +34,7 @@ public class LeadFillterDao extends BaseDao{
         return this.dbGet(sessionId, GET_CAMPAIGN_INF, params, CampaignInf.class);
     }
     /* END GET */
+
     /* BEGIN UPDATE */
     public DBResponse<String> updClBasketAfterFillter(String sessionId, UpdClBaskets params) {
         return this.dbInsOrUpd(sessionId, UPDATE_Cl_BASKET, params);
