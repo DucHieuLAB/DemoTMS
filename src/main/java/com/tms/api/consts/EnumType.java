@@ -13,6 +13,7 @@ public class EnumType {
         ;
         private final int status;
     }
+
     @Getter
     @AllArgsConstructor
     public enum Filltter{
