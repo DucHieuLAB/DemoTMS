@@ -16,16 +16,15 @@ import com.tms.dto.response.GetLeadForAgentDto;
 
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/clfresh")
 public class FreshController {
     private final GetLeadForAgentService getLeadForAgentservice;
     public FreshController(GetLeadForAgentService getLeadForAgentservice){
         this.getLeadForAgentservice=getLeadForAgentservice;
-
     }
      @PostMapping("/getlead")
     public TMSResponse<List<GetLeadForAgentDto>> getLead(@Valid @RequestBody GetLeadfor getLeadfor )throws TMSException{
-        List<GetLeadForAgentDto> result= getLeadForAgentservice.getLeadforIdLimit(getLeadfor);
+        List<GetLeadForAgentDto> result= getLeadForAgentservice.getLeadforagent(getLeadfor);
         return TMSResponse.buildResponse(result);
 
     }

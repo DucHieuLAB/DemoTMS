@@ -15,4 +15,5 @@ import lombok.Setter;
 public class GetLeadfor {
     private Integer agentId;
     private Integer addLimit;
+    private Integer dayCall;
 }

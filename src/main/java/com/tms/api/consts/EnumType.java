@@ -34,7 +34,18 @@ public class EnumType {
     @AllArgsConstructor
     public enum LeadStatus{
         NEW(1),
-        TRASH(5);
-        private final int type;
+        APPROVED(2),
+        REJECTED(3),
+        DUPLICATED(4),
+        TRASH(5),
+        CLOSED(6),
+        UNREACHABLE(7),
+        CALLBACKCONSULTING(8),
+        CALLBACKPOTPROSPECT(9),
+        BUSY(10),
+        NOANSWER(11),
+        URGENT(12),
+        CALLBACKPOTENTIAL(14);
+        private final int status;
     }
 }

@@ -10,6 +10,8 @@ import com.tms.dto.request.clFresh.InsClFreshsQuery;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+@Service
 public class ClFreshServiceImpl implements ClFreshService {
     private final ClFreshDao clFreshDao;
 

@@ -10,7 +10,8 @@ import com.tms.dto.request.ClFreshGetLead.SoSaleOderInsert;
 import com.tms.dto.request.ClFreshGetLead.UpdateforagentHold;
 import com.tms.dto.response.GetLeadForAgentDto;
 @Service
-public class ClFreshLeadForagen extends BaseDao{
+public class ClFreshGetLeadForagen extends BaseDao{
+    
     private static final String GET_LEAD_FOR_AGENT_URGENT = "get_lead_for_agent_urgent";
     private static final String GET_LEAD_FOR_AGENT_CALLBACK = "get_lead_for_agent_callback";
     private static final String GET_LEAD_FOR_AGENT_NEW = "get_lead_for_agent_new";

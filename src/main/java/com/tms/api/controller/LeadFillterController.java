@@ -18,13 +18,9 @@ public class LeadFillterController {
     public LeadFillterController(ClBasketService clBasketService) {
         this.clBasketService = clBasketService;
     }
-
     @PostMapping("/leads")
     public TMSResponse<List<ClBasket>> getLeadBasket(@Valid @RequestBody GetLeadToFillter getLeadToFillter) throws TMSException {
         List<ClBasket> result = clBasketService.getListToFillter(getLeadToFillter);
         return TMSResponse.buildResponse(result);
     }
-
-
-
 }

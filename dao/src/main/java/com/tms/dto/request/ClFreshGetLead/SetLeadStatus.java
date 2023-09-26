@@ -29,4 +29,8 @@ public class SetLeadStatus {
     private String requestTime;
     private Integer orgId;
     private String name;
+    private SetLeadFresh setLeadFresh;
+    private SetLeadStatusCallback setLeadStatusCallback;
+    private SoSaleOderInsert soSaleOderInsert;
+
 }

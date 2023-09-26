@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.tms.api.consts.EnumType;
 import com.tms.api.consts.EnumType.DbStatusResp;
@@ -26,81 +27,85 @@ import com.tms.dto.response.GetLeadForAgentDto;
 @Service
 public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadForAgentService {
     private final ClFreshGetLeadForagen clFreshGetLeadForagen;
+    
     public GetLeadForAgentServiceImpl(ClFreshGetLeadForagen clFreshGetLeadForagen){
         this.clFreshGetLeadForagen=clFreshGetLeadForagen;
     }
-    @Override //luồng 3
+    @Override 
     public List<GetLeadForAgentDto> getLeadforagent(GetLeadfor getLeadfor) throws TMSException { ///false name method
          DBResponse<List<GetLeadForAgentDto>>  result= clFreshGetLeadForagen.getLeadForHold(sessionId, getLeadfor);
          UpdateforagentHold updateforagentHold =new UpdateforagentHold();
          updateforagentHold.setAgentId(getLeadfor.getAgentId());
-          if(result.getResult().size() != 0){
+          if(!CollectionUtils.isEmpty(result.getResult())){
            return result.getResult();
           }
              result = clFreshGetLeadForagen.getLeadForAgentUrgent(sessionId, getLeadfor);
-            if(result.getResult().size() != 0){
+            if(!CollectionUtils.isEmpty(result.getResult())){
               updateforagentHold.setLeadID(result.getResult().get(0).getLeadId());
               clFreshGetLeadForagen.updScheduleUpdate(sessionId, updateforagentHold);
                 return result.getResult();
             }
            result= clFreshGetLeadForagen.getLeadforagentCallback(sessionId, getLeadfor);
-           if(result.getResult().size() !=0){
+           if(!CollectionUtils.isEmpty(result.getResult())){
              updateforagentHold.setLeadID(result.getResult().get(0).getLeadId());
             updateforagentHold.setLeadID(result.getResult().get(0).getLeadId());
              clFreshGetLeadForagen.updScheduleUpdate(sessionId, updateforagentHold);
             return result.getResult();
            }
              result = clFreshGetLeadForagen.getLeadForAgentNew(sessionId, getLeadfor);
-           if(result.getResult().size() !=0){
+           if(!CollectionUtils.isEmpty(result.getResult())){
              updateforagentHold.setLeadID(result.getResult().get(0).getLeadId());
               clFreshGetLeadForagen.updScheduleUpdate(sessionId, updateforagentHold);
             return result.getResult();
            }
            result = clFreshGetLeadForagen.getLeadForUncall(sessionId, getLeadfor);
-             if(result.getResult().size() !=0){
+             if(!CollectionUtils.isEmpty(result.getResult())){
                updateforagentHold.setLeadID(result.getResult().get(0).getLeadId());
               clFreshGetLeadForagen.updScheduleUpdate(sessionId, updateforagentHold);
             return result.getResult();
            }
         throw new  TMSEntityNotFoundException(ErrorMessages.NOT_FOUND);
     }
+    @Override 
     public boolean setLeadForAgent(SetLeadStatus setLeadStatus) throws TMSException {
-      // Kiểm tra validStatuses
+
       validateStatus(setLeadStatus);
   
-      // Xử lý các trạng thái TRASH và REJECTED
       if (setLeadStatus.getLeadStatus() == EnumType.LeadStatus.TRASH.getStatus() || setLeadStatus.getLeadStatus() == EnumType.LeadStatus.REJECTED.getStatus()) {
           handleTrashAndRejected(setLeadStatus);
       }
   
-      // Xử lý các trạng thái BUSY, NOANSWER và UNREACHABLE
       if (setLeadStatus.getLeadStatus() == EnumType.LeadStatus.BUSY.getStatus() || setLeadStatus.getLeadStatus() == EnumType.LeadStatus.NOANSWER.getStatus() || setLeadStatus.getLeadStatus() == EnumType.LeadStatus.UNREACHABLE.getStatus()) {
           handleBusyNoAnswerUnreachable(setLeadStatus);
       }
   
-      // Xử lý các trạng thái CALLBACKPOTPROSPECT, CALLBACKCONSULTING và CALLBACKPOTENTIAL
       if (setLeadStatus.getLeadStatus() == EnumType.LeadStatus.CALLBACKPOTPROSPECT.getStatus() || setLeadStatus.getLeadStatus() == EnumType.LeadStatus.CALLBACKCONSULTING.getStatus() || setLeadStatus.getLeadStatus() == EnumType.LeadStatus.CALLBACKPOTENTIAL.getStatus()) {
           handleCallBack(setLeadStatus);
       }
   
-      // Xử lý trạng thái APPROVED
       if (setLeadStatus.getLeadStatus() == EnumType.LeadStatus.APPROVED.getStatus()) {
           handleApproved(setLeadStatus);
       }
   
       return false;
   }
-  
-  // Hàm kiểm tra trạng thái hợp lệ
-  private void validateStatus(SetLeadStatus setLeadStatus) {
-      int[] validStatuses = {5, 3, 10, 11, 7, 9, 8, 14, 2};
+    
+    private void validateStatus(SetLeadStatus setLeadStatus) {
+      int[] validStatuses = {EnumType.LeadStatus.TRASH.getStatus(),
+        EnumType.LeadStatus.REJECTED.getStatus(),
+        EnumType.LeadStatus.BUSY.getStatus(),
+        EnumType.LeadStatus.NOANSWER.getStatus(),
+        EnumType.LeadStatus.UNREACHABLE.getStatus(),
+        EnumType.LeadStatus.CALLBACKPOTPROSPECT.getStatus(),
+        EnumType.LeadStatus.CALLBACKCONSULTING.getStatus(),
+        EnumType.LeadStatus.CALLBACKPOTENTIAL.getStatus(),
+        EnumType.LeadStatus.APPROVED.getStatus()};
       if (Arrays.stream(validStatuses).noneMatch(status -> status == setLeadStatus.getLeadStatus())) {
           throw new InputMismatchException("Not added to status yet");
       }
   }
-  
-  // Xử lý trạng thái TRASH và REJECTED
-  private void handleTrashAndRejected(SetLeadStatus setLeadStatus) throws TMSException {
+    
+    private void handleTrashAndRejected(SetLeadStatus setLeadStatus) throws TMSException {
     SetLeadFresh setLeadFresh =new  SetLeadFresh(setLeadStatus.getLeadId(),setLeadStatus.getAgenId(),setLeadStatus.getLeadStatus(),setLeadStatus.getFcrReason(),setLeadStatus.getAddress(),setLeadStatus.getPhone(),setLeadStatus.getProdId(),setLeadStatus.getProdName(),setLeadStatus.getComment());      if (setLeadStatus.getFcrReason().isEmpty()) {
           throw new InputMismatchException("No reason has been added for the above status");
       }
@@ -111,9 +116,8 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
           throw new TMSDbException(setLead.getErrorMsg());
       }
   }
-  
-  // Xử lý trạng thái BUSY, NOANSWER và UNREACHABLE
-  private void handleBusyNoAnswerUnreachable(SetLeadStatus setLeadStatus) throws TMSException {
+
+     private void handleBusyNoAnswerUnreachable(SetLeadStatus setLeadStatus) throws TMSException {
     SetLeadFresh setLeadFresh =new SetLeadFresh(setLeadStatus.getLeadId(),setLeadStatus.getAgenId(),setLeadStatus.getLeadStatus(),setLeadStatus.getFcrReason(),setLeadStatus.getAddress(),setLeadStatus.getPhone(),setLeadStatus.getProdId(),setLeadStatus.getProdName(),setLeadStatus.getComment());
       DBResponse<String> setLead = clFreshGetLeadForagen.setlead(sessionId, setLeadFresh);
   
@@ -121,8 +125,7 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
           throw new TMSDbException(setLead.getErrorMsg());
       }
   }
-  
-  // Xử lý các trạng thái CALLBACKPOTPROSPECT, CALLBACKCONSULTING và CALLBACKPOTENTIAL
+
   private void handleCallBack(SetLeadStatus setLeadStatus) throws TMSException {
     SetLeadFresh setLeadFresh =new SetLeadFresh(setLeadStatus.getLeadId(),setLeadStatus.getAgenId(),setLeadStatus.getLeadStatus(),setLeadStatus.getFcrReason(),setLeadStatus.getAddress(),setLeadStatus.getPhone(),setLeadStatus.getProdId(),setLeadStatus.getProdName(),setLeadStatus.getComment());
       if (setLeadStatus.getFcrReason().isEmpty()) {
@@ -135,7 +138,6 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
   
       GetIdCallback getIdCallback = new GetIdCallback(setLeadStatus.getLeadId());
       SetLeadStatusCallback setLeadStatusCallback = new SetLeadStatusCallback(setLeadStatus.getLeadId(), setLeadStatus.getRequestTime(), setLeadStatus.getOrgId());
-  
       DBResponse<List<GetLeadForAgentDto>> result = clFreshGetLeadForagen.getLeadTblCallback(sessionId, getIdCallback);
   
       if (result.getResult().size() != 0) {
@@ -154,12 +156,11 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
           }
       }
   }
-  
-  // Xử lý trạng thái APPROVED
+
   private void handleApproved(SetLeadStatus setLeadStatus) throws TMSException {
     SetLeadFresh setLeadFresh =new SetLeadFresh(setLeadStatus.getLeadId(),setLeadStatus.getAgenId(),setLeadStatus.getLeadStatus(),setLeadStatus.getFcrReason(),setLeadStatus.getAddress(),setLeadStatus.getPhone(),setLeadStatus.getProdId(),setLeadStatus.getProdName(),setLeadStatus.getComment());
       if (setLeadStatus.getAddress().isEmpty()) {
-          throw new InputMismatchException("No address has been entered for the status");
+          throw new InputMismatchException("No address has been entered for the status");///
       }
   
       if (setLeadStatus.getPhone().isEmpty()) {
@@ -171,7 +172,7 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
       }
   
       SoSaleOderInsert soSaleOderInsert = new SoSaleOderInsert(setLeadStatus.getOrgId(), setLeadStatus.getLeadId(), setLeadStatus.getName(), setLeadStatus.getPhone(), setLeadStatus.getPaymentMethod());
-      DBResponse<String> insso = clFreshGetLeadForagen.insSoSaleOder(sessionId, soSaleOderInsert);
+      DBResponse<String> insso = clFreshGetLeadForagen.insSoSaleOder(sessionId, soSaleOderInsert);//doi so
       DBResponse<String> approve = clFreshGetLeadForagen.setlead(sessionId, setLeadFresh);
   
       if (approve.getErrorCode() != DbStatusResp.SUCCESS.getStatus() || insso.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {

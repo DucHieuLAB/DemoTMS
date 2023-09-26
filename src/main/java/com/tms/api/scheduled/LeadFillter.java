@@ -101,24 +101,24 @@ public class LeadFillter extends BaseService {
         for (ClBasket basket : clBaskets){
             // Check phone num valid
             if (!PhoneHeper.checkPhoneValid(basket.getPhone())){
-                basket.setStatus(EnumType.LeadStatus.TRASH.getType());
+                basket.setStatus(EnumType.LeadStatus.TRASH.getStatus());
                 basket.setComment(MessageConst.ERROL_INVALID_PHONE_MESSAGE);
                 continue;
             }
             // check in blacklist
             if(isInBlackList(basket,blackLists)){
-                basket.setStatus(EnumType.LeadStatus.TRASH.getType());
+                basket.setStatus(EnumType.LeadStatus.TRASH.getStatus());
                 basket.setComment(MessageConst.ERROL_IN_BLACKLIST_MESSAGE);
                 continue;
             }
             // Check Duplicate
             if(checkSelfDuplicate(basket,clBaskets)){
-                basket.setStatus(EnumType.LeadStatus.TRASH.getType());
+                basket.setStatus(EnumType.LeadStatus.TRASH.getStatus());
                 basket.setComment(MessageConst.ERROL_DUPLICATE_MESSAGE);
                 continue;
             }
             if (checkForDuplicates(basket,leadsInRange)){
-                basket.setStatus(EnumType.LeadStatus.TRASH.getType());
+                basket.setStatus(EnumType.LeadStatus.TRASH.getStatus());
                 basket.setComment(MessageConst.ERROL_DUPLICATE_MESSAGE);
             }
             updateStatus(basket);
@@ -132,7 +132,7 @@ public class LeadFillter extends BaseService {
             if (extbasket == basket){
                 continue;
             }
-            if (!extbasket.equals(EnumType.LeadStatus.TRASH.getType())
+            if (!extbasket.equals(EnumType.LeadStatus.TRASH.getStatus())
                     && extbasket.getPhone().equals(basket.getPhone())
                     && extbasket.getProdId().equals(basket.getProdId())
                     && extbasket.getCreateDate().isAfter(minTime)
@@ -151,7 +151,7 @@ public class LeadFillter extends BaseService {
         LocalDateTime minTime = createDate1.minusHours(24);
 
         List<ClBasket> matchingList = leadsInRange.stream()
-                .filter(basket2 -> !basket2.getStatus().equals(EnumType.LeadStatus.TRASH.getType())
+                .filter(basket2 -> !basket2.getStatus().equals(EnumType.LeadStatus.TRASH.getStatus())
                         && basket.getPhone().equals(basket2.getPhone())
                         && basket.getProdId().equals(basket2.getProdId())
                         && basket2.getCreateDate().isAfter(minTime)
