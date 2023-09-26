@@ -25,7 +25,7 @@ public class BlackListServiceImpl extends BaseService implements BackListService
         GetBlackList getBlackList = new GetBlackList();
         DBResponse<List<CfBlackList>> blackLists = cfBlackListDao.getBlackList(sessionId,getBlackList);
         if (blackLists == null || blackLists.getResult().size() == 0){
-            return null;
+            throw new TMSDbException("Balcklist is Empty");
         }
         if(blackLists.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
             throw new TMSDbException(blackLists.getErrorMsg());

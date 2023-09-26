@@ -1,18 +1,17 @@
-package com.tms.dto.request.clBasket;
+package com.tms.dto.request.clFresh;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
-public class UpdClBaskets {
+public class UpdClFreshs {
     private String json;
     private String timeZone;
 
-    public UpdClBaskets(){
+    public UpdClFreshs(){
         // set default for time zone
         this.timeZone = "Asia/Ho_Chi_Minh";
     }

@@ -1,58 +1,56 @@
 db-configs:
   file-path: data/bak
   configs:
-#    BEGIN SCHEDULE UPDATE
-     - func-name: "get_schedule_update"
-       q-mode: "db"
-       q-timeout: [ 5, 3 ]
-       q-fallback: true
-     - func-name: "ins_schedule_update"
-       always-write-file: false
-     - func-name: "upd_schedule_update"
-       always-write-file: false
-     - func-name: "get_lead_for_agent_urgent"
-       q-mode: "db"
-       q-timeout: [ 5, 3 ]
-       q-fallback: true
-     - func-name: "get_lead_for_agent"
-       q-mode: "db"
-       q-timeout: [ 5, 3 ]
-       q-fallback: true
-     - func-name: "get_lead_for_agent_uncall"
-       q-mode: "db"
-       q-timeout: [ 5, 3 ]
-       q-fallback: true
-     - func-name: "get_lead_for_agent_callback"
-       q-mode: "db"
-       q-timeout: [ 5, 3 ]
-       q-fallback: true
-     - func-name: "get_lead_for_agent_new"
-       q-mode: "db"
-       q-timeout: [ 5, 3 ]
-       q-fallback: true
-     - func-name: "get_lead_for_agent_update_hold"
-       always-write-file: false
-     - func-name: "get_lead_for_agent_hold"
-       q-mode: "db"
-       q-timeout: [ 5, 3 ]
-       q-fallback: true
-     - func-name: "update_lead_for_agent"
-       always-write-file: false
-     - func-name: "ins_lead_for_agent_callback"
-       always-write-file: false
-     - func-name: "upd_lead_for_agent_callback"
-       always-write-file: false
-     - func-name: "get_lead_tbl_callback"
-       q-mode: "db"
-       q-timeout: [ 5, 3 ]
-       q-fallback: true
-     - func-name: "ins_so_sale_oder"
-       always-write-file: false
+    # BEGIN SCHEDULE UPDATE
+    - func-name: "get_schedule_update"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
+    - func-name: "ins_schedule_update"
+      always-write-file: false
+    - func-name: "upd_schedule_update"
+      always-write-file: false
+    - func-name: "get_lead_for_agent_urgent"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
+    - func-name: "get_lead_for_agent"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
+    - func-name: "get_lead_for_agent_uncall"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
+    - func-name: "get_lead_for_agent_callback"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
+    - func-name: "get_lead_for_agent_new"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
+    - func-name: "get_lead_for_agent_update_hold"
+      always-write-file: false
+    - func-name: "get_lead_for_agent_hold"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
+    - func-name: "update_lead_for_agent"
+      always-write-file: false
+    - func-name: "ins_lead_for_agent_callback"
+      always-write-file: false
+    - func-name: "upd_lead_for_agent_callback"
+      always-write-file: false
+    - func-name: "get_lead_tbl_callback"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
+    - func-name: "ins_so_sale_oder"
+      always-write-file: false
+    # END SCHEDULE UPDATE
 
-       
-
-#   END SCHEDULE UPDATE
-#    BEGIN FILLTER LEAD
+    # BEGIN FILTER LEAD
     - func-name: "get_null_attribute3_rows"
       q-mode: "db"
       q-timeout: [ 5, 3 ]
@@ -81,8 +79,18 @@ db-configs:
       always-write-file: false
     - func-name: "update_lead_baskets"
       always-write-file: false
-#    END FILLTER LEAD
-#    BEGIN UPDATE SALE ORDER
+    # END FILTER LEAD
+    # BEGIN UPDATE SALE ORDER
     - func-name: "update_od_sale_order"
       always-write-file: false
-#    END SALE ORDER
+    - func-name: "get_sale_order_validate"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
+    # END SALE ORDER
+    #BEGIN INSERT DO
+    - func-name: "insert_od_do_new"
+      always-write-file: false
+    - func-name: "insert_od_do_new_query"
+      always-write-file: false
+    #END

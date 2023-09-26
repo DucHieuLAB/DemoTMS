@@ -17,13 +17,14 @@ import org.springframework.stereotype.Component;
 import java.time.ZoneId;
 import java.time.LocalDateTime;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 @Component
-public class LeadFillter extends BaseService {
+public class LeadFilter extends BaseService {
 
     private final BackListService backListService;
 
@@ -33,7 +34,7 @@ public class LeadFillter extends BaseService {
 
     private final ClFreshService clFreshService;
 
-    public LeadFillter(BackListService backListService, CampaignService campaignService, ClBasketService clBasketService,ClFreshService clFreshService) {
+    public LeadFilter(BackListService backListService, CampaignService campaignService, ClBasketService clBasketService, ClFreshService clFreshService) {
         this.backListService = backListService;
         this.campaignService = campaignService;
         this.clBasketService = clBasketService;
@@ -42,14 +43,14 @@ public class LeadFillter extends BaseService {
 
     private final String LOCAL_TIME_ZONE ="Asia/Ho_Chi_Minh";
 
-    @Scheduled(cron = "0 43 16 * * *", zone = "Asia/Ho_Chi_Minh")
-    public void fillterLead() throws TMSDbException {
+    @Scheduled(cron = "0 24 10 * * *", zone = "Asia/Ho_Chi_Minh")
+    public void filterLead() throws TMSDbException {
         // Get Data To Process
         List<ClBasket> clBaskets = clBasketService.getListToProcess(sessionId);
         List<CfBlackList> blackLists = backListService.getBlackList(sessionId);
         LocalDateTime time = findMinimumCreateDate(clBaskets);
-        List<ClBasket> leadsInRange = clBasketService.getLeadInTimeRange(clBaskets, sessionId, time);
-        List<CampaignInf> campaignInfs = campaignService.getCampainInfs(EnumType.Campaign.CALLING_LIST.getType(),sessionId);
+        List<ClBasket> leadsInRange = clBasketService.getLeadInTimeRange(time,time.minus(24, ChronoUnit.HOURS));
+        List<CampaignInf> campaignInfs = campaignService.getCampainInfs(EnumType.Campaign.CALLING_LIST.getType());
 
         Collections.sort(clBaskets);
 
@@ -97,28 +98,28 @@ public class LeadFillter extends BaseService {
         });
     }
 
-    private void filterInvalidPhonesAndBlackListAndListInRage(List<ClBasket> clBaskets, List<CfBlackList> blackLists, List<ClBasket> leadsInRange) {
+    private void filterInvalidPhonesAndBlackListAndListInRage(List<ClBasket> clBaskets, List<CfBlackList> blackLists, List<ClBasket> leadsInRange)  {
         for (ClBasket basket : clBaskets){
             // Check phone num valid
             if (!PhoneHeper.checkPhoneValid(basket.getPhone())){
-                basket.setStatus(EnumType.LeadStatus.TRASH.getType());
+                basket.setStatus(EnumType.LeadStatus.TRASH.getStatus());
                 basket.setComment(MessageConst.ERROL_INVALID_PHONE_MESSAGE);
                 continue;
             }
             // check in blacklist
             if(isInBlackList(basket,blackLists)){
-                basket.setStatus(EnumType.LeadStatus.TRASH.getType());
+                basket.setStatus(EnumType.LeadStatus.TRASH.getStatus());
                 basket.setComment(MessageConst.ERROL_IN_BLACKLIST_MESSAGE);
                 continue;
             }
             // Check Duplicate
             if(checkSelfDuplicate(basket,clBaskets)){
-                basket.setStatus(EnumType.LeadStatus.TRASH.getType());
+                basket.setStatus(EnumType.LeadStatus.TRASH.getStatus());
                 basket.setComment(MessageConst.ERROL_DUPLICATE_MESSAGE);
                 continue;
             }
             if (checkForDuplicates(basket,leadsInRange)){
-                basket.setStatus(EnumType.LeadStatus.TRASH.getType());
+                basket.setStatus(EnumType.LeadStatus.TRASH.getStatus());
                 basket.setComment(MessageConst.ERROL_DUPLICATE_MESSAGE);
             }
             updateStatus(basket);
@@ -132,7 +133,7 @@ public class LeadFillter extends BaseService {
             if (extbasket == basket){
                 continue;
             }
-            if (!extbasket.equals(EnumType.LeadStatus.TRASH.getType())
+            if (!extbasket.equals(EnumType.LeadStatus.TRASH.getStatus())
                     && extbasket.getPhone().equals(basket.getPhone())
                     && extbasket.getProdId().equals(basket.getProdId())
                     && extbasket.getCreateDate().isAfter(minTime)
@@ -151,7 +152,7 @@ public class LeadFillter extends BaseService {
         LocalDateTime minTime = createDate1.minusHours(24);
 
         List<ClBasket> matchingList = leadsInRange.stream()
-                .filter(basket2 -> !basket2.getStatus().equals(EnumType.LeadStatus.TRASH.getType())
+                .filter(basket2 -> !basket2.getStatus().equals(EnumType.LeadStatus.TRASH.getStatus())
                         && basket.getPhone().equals(basket2.getPhone())
                         && basket.getProdId().equals(basket2.getProdId())
                         && basket2.getCreateDate().isAfter(minTime)
