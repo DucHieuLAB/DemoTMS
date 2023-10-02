@@ -1,4 +1,5 @@
 package com.tms.api.controller;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import javax.validation.Valid;
 
@@ -29,7 +30,7 @@ public class FreshController {
 
     }
     @PostMapping("/setlead")
-    public TMSResponse<Boolean> createScheduleUpdate(@Valid @RequestBody SetLeadStatus setLeadStatus) throws TMSException {
+    public TMSResponse<Boolean> createScheduleUpdate(@Valid @RequestBody SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         boolean result = getLeadForAgentservice.setLeadForAgent(setLeadStatus);
         return TMSResponse.buildResponse(result);
     }

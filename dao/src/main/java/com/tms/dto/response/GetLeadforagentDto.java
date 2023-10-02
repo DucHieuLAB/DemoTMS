@@ -7,7 +7,7 @@ import lombok.Setter;
 public class GetLeadForAgentDto  implements Serializable {
     private Integer leadId;
     private Integer agcId;
-    private Integer agcCode;
+    private String agcCode;
     private Integer orgID;
     private String ccCode;
     private String name;

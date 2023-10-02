@@ -1,21 +1,23 @@
-package com.tms.dto.request.ClFreshGetLead;
+package com.tms.dto.request.clCallback;
+
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.tms.DaoConst;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SetLeadFresh {
-    private Integer leadId;
-    private Integer cpId;
-    private Integer callinglistId;
+@Pattern(regexp = DaoConst.DATE_TIME_REGEX, message = "{date.Pattern.message}")
+public class InsClCallback {
+       private Integer leadId;
     private Integer agcId;
     private String agcCode;
     private Integer orgId;
@@ -41,12 +43,20 @@ public class SetLeadFresh {
     private String userDefin02;
     private String userDefin03;
     private String userDefin04;
-    private String userDefin05;
+    private JsonNode attribute;
+    private String callbackTime;
+    @Pattern(regexp = DaoConst.DATE_TIME_REGEX, message = "{date.Pattern.message}")
+    private String requestTime;
+    private Integer owner;
     private String createDate;
     private String modifyDate;
     private Integer modifyBy;
+    private Integer cpId;
+    private Integer callingListId;
     private String leadType;
     private String agcLeadAddress;
+    private String callbackPhone;
+    private String callbackNote;
     private String otherName1;
     private String otherPhone1;
     private String otherName2;
@@ -66,6 +76,7 @@ public class SetLeadFresh {
     private Integer attemptOther1;
     private Integer attemptOther2;
     private Integer attemptOther3;
+    private String callbackName;
     private String clickId;
     private String affiliateId;
     private String subid1;
@@ -86,25 +97,6 @@ public class SetLeadFresh {
     private String customerComment;
     private String internalComment;
     private String carrierComment;
-    private Integer groupId;
-    private String neighborhood;
-    private String postalCode;
-    private Integer trackerId;
-    private String agentNote;
-    private String firstCallTime;
-    private Integer firstCallBy;
-    private Integer firstCallStatus;
-    private String firstCallReason;
-    private String firstCallComment;
-    private String fcrTime;
-    private Integer fcrBy;
-    private Integer fcrStatus;
-    private String fcrReason;
-    private String fcrComment;
-    private Integer crmActionType;
-    private Integer team;
-    private Integer teamSupervisor;
-    private Integer agentHold;
-    private String appointmentDate;
-    private String deliveryPackageCode;
+    private String closeTime;
+    private String maxCloseTime;
 }

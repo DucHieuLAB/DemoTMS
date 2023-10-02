@@ -1,4 +1,5 @@
 package com.tms.api.service;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.tms.api.exception.TMSException;
@@ -9,5 +10,5 @@ public interface GetLeadForAgentService {
 
     List<GetLeadForAgentDto> getLeadforagent(GetLeadfor getLeadfor) throws TMSException;
     
-    boolean setLeadForAgent(SetLeadStatus setLeadStatus) throws TMSException;    
+    boolean setLeadForAgent(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException;    
 }

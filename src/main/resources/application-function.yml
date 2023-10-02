@@ -48,6 +48,9 @@ db-configs:
       q-fallback: true
     - func-name: "ins_so_sale_oder"
       always-write-file: false
+    - func-name: "del_cl_callback"
+      always-write-file: false
+
     # END SCHEDULE UPDATE
 
     # BEGIN FILTER LEAD

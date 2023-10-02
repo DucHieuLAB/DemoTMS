@@ -5,9 +5,9 @@ import com.tms.commons.DBResponse;
 import com.tms.dto.request.ClFreshGetLead.GetIdCallback;
 import com.tms.dto.request.ClFreshGetLead.GetLeadfor;
 import com.tms.dto.request.ClFreshGetLead.SetLeadFresh;
-import com.tms.dto.request.ClFreshGetLead.SetLeadStatusCallback;
 import com.tms.dto.request.ClFreshGetLead.SoSaleOderInsert;
-import com.tms.dto.request.ClFreshGetLead.UpdateforagentHold;
+import com.tms.dto.request.clCallback.InsClCallback;
+import com.tms.dto.request.clCallback.UpdClCallback;
 import com.tms.dto.response.GetLeadForAgentDto;
 @Service
 public class ClFreshGetLeadForagen extends BaseDao{
@@ -36,7 +36,7 @@ public class ClFreshGetLeadForagen extends BaseDao{
     public DBResponse<List<GetLeadForAgentDto>> getLeadForUncall(String sessionId, GetLeadfor params) {
         return this.dbGet(sessionId, GET_LEAD_FOR_AGENT_UNCALL, params, GetLeadForAgentDto.class);
     }
-        public DBResponse<String> updScheduleUpdate(String sessionId, UpdateforagentHold params) {
+        public DBResponse<String> updScheduleUpdate(String sessionId, SetLeadFresh params) {
         return this.dbInsOrUpd(sessionId, GET_LEAD_FOR_AGENT_UPDATE_HOLD, params);
     }
     public DBResponse<List<GetLeadForAgentDto>> getLeadForHold(String sessionId, GetLeadfor params) {
@@ -45,10 +45,10 @@ public class ClFreshGetLeadForagen extends BaseDao{
             public DBResponse<String> setlead(String sessionId, SetLeadFresh params) {
         return this.dbInsOrUpd(sessionId, SET_LEAD_FOR_AGENT, params);
     }
-    public DBResponse<String> setLeadForAgentCallback(String sessionId, SetLeadStatusCallback params) {
+    public DBResponse<String> setLeadForAgentCallback(String sessionId, InsClCallback params) {
         return this.dbInsOrUpd(sessionId, INS_LEAD_FOR_AGENT_CALLBACK, params);
     }
-        public DBResponse<String> updeadForAgentCallback(String sessionId, SetLeadStatusCallback params) {
+        public DBResponse<String> updeadForAgentCallback(String sessionId, UpdClCallback params) {
         return this.dbInsOrUpd(sessionId, UDP_LEAD_FOR_AGENT_CALLBACK, params);
     }
        public DBResponse<List<GetLeadForAgentDto>> getLeadTblCallback(String sessionId, GetIdCallback params) {
