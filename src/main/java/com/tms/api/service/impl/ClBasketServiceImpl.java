@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -40,14 +41,14 @@ public class ClBasketServiceImpl extends BaseService implements ClBasketService 
     }
 
     @Override
-    public List<ClBasket> getLeadInTimeRange(List<ClBasket> clBaskets, String sessionId, LocalDateTime time) throws TMSDbException {
+    public List<ClBasket> getLeadInTimeRange(LocalDateTime StartTime,LocalDateTime EndTime) throws TMSDbException {
         GetLeadBasketsInTimeRange getLeadBasketsInTimeRange = new GetLeadBasketsInTimeRange();
-        getLeadBasketsInTimeRange.setEndTime(DateHelper.toDateTime(time));
-        getLeadBasketsInTimeRange.setStartTime(DateHelper.toDateTime(time.minus(24, ChronoUnit.HOURS)));
+        getLeadBasketsInTimeRange.setEndTime(DateHelper.toDateTime(EndTime));
+        getLeadBasketsInTimeRange.setStartTime(DateHelper.toDateTime(StartTime));
         DBResponse<List<ClBasket>>  leadsInRange = clBasketDao.getLeadBasketsInTimeRange(sessionId,getLeadBasketsInTimeRange);
         // Check Exception
         if (leadsInRange == null || leadsInRange.getResult().size() == 0){
-            return null;
+            return new ArrayList<>();
         }
         if(leadsInRange.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
             throw new TMSDbException(leadsInRange.getErrorMsg());

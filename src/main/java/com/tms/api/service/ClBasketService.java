@@ -13,7 +13,7 @@ public interface ClBasketService {
 
     public List<ClBasket> getListToFillter(GetLeadToFillter getLeadToFillter) throws TMSException;
 
-    public List<ClBasket> getLeadInTimeRange(List<ClBasket> clBaskets, String sessionId, LocalDateTime time)throws TMSDbException;
+    public List<ClBasket> getLeadInTimeRange(LocalDateTime StartTime,LocalDateTime EndTime)throws TMSDbException;
 
     public List<ClBasket> getListToProcess(String sessionId) throws TMSDbException;
 

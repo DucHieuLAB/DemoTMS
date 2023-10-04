@@ -9,7 +9,6 @@ import java.util.List;
 public class ClFreshConverter {
     public static List<InsClFresh> convertToInsClFreshs(List<ClBasket> clBasketList) {
         List<InsClFresh> insClFreshList = new ArrayList<>();
-
         for (ClBasket clBasket : clBasketList) {
             InsClFresh insClFresh = new InsClFresh();
             insClFresh.setLeadId(clBasket.getLeadId());
@@ -50,7 +49,6 @@ public class ClFreshConverter {
             insClFresh.setCreateDate(DateHelper.toDateTime(clBasket.getCreate_date()));
             insClFresh.setTrackerId(clBasket.getTrackerId());
             insClFresh.setIpAddress(clBasket.getIpAddress());
-
             insClFreshList.add(insClFresh);
         }
         return insClFreshList;

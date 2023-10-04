@@ -2,12 +2,14 @@ package com.tms.api.controller;
 
 import com.tms.api.commons.ApiValidatorError;
 import com.tms.api.commons.TMSResponse;
+import com.tms.api.consts.EnumType;
 import com.tms.api.consts.MessageConst;
 import com.tms.api.exception.ErrorMessages;
 import com.tms.api.exception.TMSException;
 import com.tms.api.exception.TMSInvalidInputException;
 import com.tms.api.service.SaleOrderService;
 import com.tms.dto.request.saleOrder.UpdSaleOrder;
+import com.tms.dto.request.saleOrder.ValidSaleOrder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,8 +25,8 @@ public class SaleOrderController {
     }
 
     @PutMapping("/{id}")
-    public TMSResponse<Boolean> updateScheduleUpdate(@PathVariable int id,
-                                                     @Valid @RequestBody UpdSaleOrder updSaleOrder) throws TMSException {
+    public TMSResponse<Boolean> updateSaleOrder(@PathVariable int id,
+                                                @Valid @RequestBody UpdSaleOrder updSaleOrder) throws TMSException {
         if (id != updSaleOrder.getSoId()) {
             ApiValidatorError validatorError = ApiValidatorError.builder()
                     .field("id")
@@ -33,7 +35,10 @@ public class SaleOrderController {
                     .build();
             throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
         }
-        boolean result = saleOrderService.updSaleOrder(id,updSaleOrder);
+        boolean result = saleOrderService.updSaleOrder(id, updSaleOrder);
         return TMSResponse.buildResponse(result);
     }
+
+
+
 }
