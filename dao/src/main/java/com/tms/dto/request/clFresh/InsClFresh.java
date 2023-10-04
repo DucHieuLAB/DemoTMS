@@ -44,9 +44,9 @@ public class InsClFresh {
     private String userDefin04;
     private String userDefin05;
     private JsonNode attribute;
-    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date.Pattern.message}")
+    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date-time.Pattern.message}")
     private String createDate;
-    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date.Pattern.message}")
+    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date-time.Pattern.message}")
     private String modifyDate;
     private Integer modifyBy;
     private Integer cpId;
@@ -63,9 +63,9 @@ public class InsClFresh {
     private String otherPhone4;
     private String otherName5;
     private String otherPhone5;
-    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date.Pattern.message}")
+    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date-time.Pattern.message}")
     private String lastCallTime;
-    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date.Pattern.message}")
+    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date-time.Pattern.message}")
     private String nextCallTime;
     private Integer numberOfDay;
     private Integer attemptBusy;
@@ -289,6 +289,5 @@ public class InsClFresh {
                         "," + (paymentTransactionId == null ? "null" : "'" + paymentTransactionId + "'") + ")"
         );
     }
-
 
 }

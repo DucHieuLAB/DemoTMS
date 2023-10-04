@@ -24,7 +24,4 @@ public class LeadFillterController {
         List<ClBasket> result = clBasketService.getListToFillter(getLeadToFillter);
         return TMSResponse.buildResponse(result);
     }
-
-
-
 }

@@ -1,13 +1,10 @@
 package com.tms.dto.response;
 
-import com.tms.dto.request.lead.ClFresh;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
@@ -68,6 +65,16 @@ public class ClBasket implements Comparable<ClBasket>{
     private Integer trackerId;
     private String ipAddress;
 
+    public static ClFresh toInsLeadAfterFillter(ClBasket basket){
+        ClFresh CLFresh = new ClFresh();
+        CLFresh.setLeadId(basket.leadId);
+        CLFresh.setName(basket.name);
+        CLFresh.setPhone(basket.getPhone());
+        CLFresh.setProdId(basket.getProdId());
+        CLFresh.setLeadStatus(basket.getStatus());
+        CLFresh.setComment(basket.getComment());
+        return CLFresh;
+    }
 
     @Override
     public String toString() {
