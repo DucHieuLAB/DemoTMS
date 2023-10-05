@@ -33,7 +33,7 @@ public class FreshController {
     }
      @PostMapping("/getlead")
     public TMSResponse<List<GetLeadForAgentDto>> getLead(@Valid @RequestBody GetLeadfor getLeadfor )throws TMSException{
-        List<GetLeadForAgentDto> result= getLeadForAgentservice.getLeadForAgent(getLeadfor);
+        List<GetLeadForAgentDto> result= getLeadForAgentService.getLeadForAgent(getLeadfor);
         return TMSResponse.buildResponse(result);
     }
 
@@ -47,7 +47,7 @@ public class FreshController {
                     .build();
             throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
         }
-        boolean result = getLeadForAgentservice.updLead(id,setLeadStatus);
+        boolean result = getLeadForAgentService.updLead(id,setLeadStatus);
         return TMSResponse.buildResponse(result);
     }
 }
