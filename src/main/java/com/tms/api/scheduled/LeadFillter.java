@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Component
 public class LeadFillter extends BaseService {
 
-    private final BackListService backListService;
+    private final BlackListService backListService;
 
     private final CampaignService campaignService;
 
@@ -33,7 +33,7 @@ public class LeadFillter extends BaseService {
 
     private final ClFreshService clFreshService;
 
-    public LeadFillter(BackListService backListService, CampaignService campaignService, ClBasketService clBasketService,ClFreshService clFreshService) {
+    public LeadFillter(BlackListService backListService, CampaignService campaignService, ClBasketService clBasketService,ClFreshService clFreshService) {
         this.backListService = backListService;
         this.campaignService = campaignService;
         this.clBasketService = clBasketService;

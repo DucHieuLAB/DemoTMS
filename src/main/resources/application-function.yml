@@ -91,4 +91,8 @@ db-configs:
     # BEGIN UPDATE SALE ORDER
     - func-name: "update_od_sale_order"
       always-write-file: false
+    - func-name: "get_sale_order_validate"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
     # END SALE ORDER
