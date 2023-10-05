@@ -21,14 +21,14 @@ import com.tms.dto.response.GetLeadForAgentDto;
 
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/clfresh")
 public class FreshController {
     private final GetLeadForAgentService getLeadForAgentService;
 
     private final ClFreshService clFreshService;
 
-    public FreshController(GetLeadForAgentService getLeadForAgentService, ClFreshService clFreshService) {
-        this.getLeadForAgentService = getLeadForAgentService;
+    public FreshController(GetLeadForAgentService getLeadForAgentservice, ClFreshService clFreshService) {
+        this.getLeadForAgentService = getLeadForAgentservice;
         this.clFreshService = clFreshService;
     }
 
@@ -38,12 +38,12 @@ public class FreshController {
         return TMSResponse.buildResponse(result);
     }
 
-    @PostMapping("/setlead")
+    @PostMapping("/setlead/{id}")
     public TMSResponse<Boolean> createScheduleUpdate(@PathVariable int id,@Valid @RequestBody SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         if (id != setLeadStatus.getSetLeadFresh().getLeadId()) {
             ApiValidatorError validatorError = ApiValidatorError.builder()
                     .field("id")
-                    .rejectValue(setLeadStatus.getSetLeadFresh().getLeadId())
+                    .rejectValue(id != setLeadStatus.getSetLeadFresh().getLeadId())
                     .message(MessageConst.NOT_MATCH_VALUE_IN_URL)
                     .build();
             throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);

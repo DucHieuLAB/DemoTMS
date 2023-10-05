@@ -11,8 +11,6 @@ db-configs:
       always-write-file: false
     - func-name: "upd_schedule_update"
       always-write-file: false
-      always-write-file: false
-      always-write-file: false
     - func-name: "get_lead_for_agent_urgent"
       q-mode: "db"
       q-timeout: [5, 3]
