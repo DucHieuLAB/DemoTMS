@@ -2,6 +2,7 @@ db-configs:
   file-path: data/bak
   configs:
     # BEGIN SCHEDULE UPDATE
+    # BEGIN SCHEDULE UPDATE
     - func-name: "get_schedule_update"
       q-mode: "db"
       q-timeout: [5, 3]
@@ -9,6 +10,7 @@ db-configs:
     - func-name: "ins_schedule_update"
       always-write-file: false
     - func-name: "upd_schedule_update"
+      always-write-file: false
       always-write-file: false
       always-write-file: false
     - func-name: "get_lead_for_agent_urgent"

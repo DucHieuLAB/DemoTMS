@@ -3,6 +3,8 @@ package com.tms.api.consts;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Optional;
+
 public class EnumType {
 
     @Getter
@@ -46,6 +48,36 @@ public class EnumType {
         NOANSWER(11),
         URGENT(12),
         CALLBACKPOTENTIAL(14);
+        private final int status;
+
+    }
+    @Getter
+    @AllArgsConstructor
+    public enum SaleOrder{
+        NEW(41),
+        CANCEL(44),
+        SUCCESS(45),
+        PENDING(42),
+        UNASIGNE(46),
+        VALIDATED(43),
+        DELAY(357),
+        DO_CREATE_FAIL(48);
+
+        private final int status;
+        public static boolean isStatusInEnum(int status) {
+            for (SaleOrder order : SaleOrder.values()) {
+                if (order.getStatus() == status) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    }
+    @Getter
+    @AllArgsConstructor
+    public enum DeliveryOrder{
+        NEW(51);
         private final int status;
     }
 }

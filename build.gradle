@@ -20,6 +20,7 @@ dependencies {
     implementation 'commons-beanutils:commons-beanutils:1.9.4'
 
 
+
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'redis.clients:jedis:3.6.3'
 
