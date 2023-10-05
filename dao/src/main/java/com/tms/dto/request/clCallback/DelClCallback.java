@@ -1,4 +1,4 @@
-package com.tms.dto.request.ClFreshGetLead;
+package com.tms.dto.request.clCallback;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -9,12 +9,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class GetLeadfor {
-    private Integer agentId;
-    private Integer addLimit;
-    private Integer dayCall;
-    private Integer totalCall;
+public class DelClCallback {
+    private Integer leadId;
 }

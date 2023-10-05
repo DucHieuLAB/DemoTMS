@@ -33,4 +33,5 @@ public class CampaignServiceImpl extends BaseService implements CampaignService 
         }
         return campaignDbres.getResult();
     }
+
 }

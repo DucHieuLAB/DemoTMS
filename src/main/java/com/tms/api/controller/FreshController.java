@@ -1,5 +1,6 @@
 package com.tms.api.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import javax.validation.Valid;
 
@@ -16,33 +17,33 @@ import com.tms.dto.response.GetLeadForAgentDto;
 
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/clfresh")
 public class FreshController {
-    private final GetLeadForAgentService getLeadForAgentservice;
+    private final GetLeadForAgentService getLeadForAgentService;
 
     private final ClFreshService clFreshService;
 
     public FreshController(GetLeadForAgentService getLeadForAgentservice, ClFreshService clFreshService) {
-        this.getLeadForAgentservice = getLeadForAgentservice;
+        this.getLeadForAgentService = getLeadForAgentservice;
         this.clFreshService = clFreshService;
     }
-
-    @PostMapping("/getlead")
-    public TMSResponse<List<GetLeadForAgentDto>> getLead(@Valid @RequestBody GetLeadfor getLeadfor) throws TMSException {
-        List<GetLeadForAgentDto> result = getLeadForAgentservice.getLeadforAgent(getLeadfor);
+     @PostMapping("/getlead")
+    public TMSResponse<List<GetLeadForAgentDto>> getLead(@Valid @RequestBody GetLeadfor getLeadfor )throws TMSException{
+        List<GetLeadForAgentDto> result= getLeadForAgentService.getLeadForAgent(getLeadfor);
         return TMSResponse.buildResponse(result);
     }
 
-    @PostMapping("/setlead")
-    public TMSResponse<Boolean> createScheduleUpdate(@Valid @RequestBody SetLeadStatus setLeadStatus) throws TMSException {
-        boolean result = getLeadForAgentservice.setLeadForAgent(setLeadStatus);
-        return TMSResponse.buildResponse(result);
-    }
-
-    @PutMapping("fresh")
-    public TMSResponse<Boolean> updateClFresh(
-                                              @Valid @RequestBody UpdClFresh updClFresh) throws TMSException {
-        boolean result = clFreshService.updClFreshAfterValidSaleOrder(updClFresh);
+    @PostMapping("/setlead/{id}")
+    public TMSResponse<Boolean> createScheduleUpdate(@PathVariable int id,@Valid @RequestBody SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        if (id != setLeadStatus.getSetLeadFresh().getLeadId()) {
+            ApiValidatorError validatorError = ApiValidatorError.builder()
+                    .field("id")
+                    .rejectValue(id != setLeadStatus.getSetLeadFresh().getLeadId())
+                    .message(MessageConst.NOT_MATCH_VALUE_IN_URL)
+                    .build();
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
+        }
+        boolean result = getLeadForAgentService.updLead(id,setLeadStatus);
         return TMSResponse.buildResponse(result);
     }
 }

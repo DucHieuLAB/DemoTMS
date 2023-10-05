@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sun.jvm.hotspot.debugger.cdbg.EnumType;
 
 import javax.validation.constraints.Pattern;
 

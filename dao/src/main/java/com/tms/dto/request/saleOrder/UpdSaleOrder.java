@@ -21,7 +21,6 @@ public class UpdSaleOrder {
     private String leadPhone;
     private BigDecimal amount;
     private Integer paymentMethod;
-    @NotNull
     private Integer status;
     private Integer createBy;
     @Pattern(regexp = DaoConst.DATE_REGEX, message = "{date.Pattern.message}")

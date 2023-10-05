@@ -2,14 +2,16 @@ package com.tms.dto.request.ClFreshGetLead;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UpdateforagentHold {
-      private Integer LeadID;
-      private Integer agentId;
-      
+public class GetLeadById {
+   private Integer leadId;
 }
