@@ -37,7 +37,7 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
         this.clCallbackDao=clCallbackDao;
     }
     @Override
-    public List<GetLeadForAgentDto> getLeadforagent(GetLeadfor getLeadfor) throws TMSException {
+    public List<GetLeadForAgentDto> getLeadForAgent(GetLeadfor getLeadfor) throws TMSException {
         DBResponse<List<GetLeadForAgentDto>> result = null;
     
         result = clFreshGetLeadForagen.getLeadForHold(sessionId, getLeadfor);
@@ -82,7 +82,7 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
         return result.getResult();
     }
     @Override 
-    public boolean UpdLead(int id,SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+    public boolean updLead(int id,SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         GetLeadById getLeadById = new GetLeadById(id);
         
         DBResponse<List<GetLeadForAgentDto>> result = clFreshGetLeadForagen.getLeadById(sessionId, getLeadById);
