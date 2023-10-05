@@ -6,7 +6,7 @@ import com.tms.dto.request.ClFreshGetLead.GetLeadfor;
 import com.tms.dto.request.ClFreshGetLead.SetLeadStatus;
 import com.tms.dto.response.GetLeadForAgentDto;
 public interface GetLeadForAgentService { 
-    List<GetLeadForAgentDto> getLeadForAgent(GetLeadfor getLeadfor) throws TMSException;
-    boolean updLead(int id,SetLeadStatus setLeadStatus) throws TMSException;
+    List<GetLeadForAgentDto> getLeadforAgent(GetLeadfor getLeadfor) throws TMSException;
+    boolean setLeadForAgent(SetLeadStatus setLeadStatus) throws TMSException;
     
 }
