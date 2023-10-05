@@ -3,13 +3,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tms.api.commons.ApiValidatorError;
 import com.tms.api.commons.TMSResponse;
+import com.tms.api.consts.MessageConst;
+import com.tms.api.exception.ErrorMessages;
 import com.tms.api.exception.TMSException;
+import com.tms.api.exception.TMSInvalidInputException;
 import com.tms.api.service.GetLeadForAgentService;
 import com.tms.dto.request.ClFreshGetLead.GetLeadfor;
 import com.tms.dto.request.ClFreshGetLead.SetLeadStatus;
@@ -29,9 +34,17 @@ public class FreshController {
         return TMSResponse.buildResponse(result);
 
     }
-    @PostMapping("/setlead")
-    public TMSResponse<Boolean> createScheduleUpdate(@Valid @RequestBody SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-        boolean result = getLeadForAgentservice.setLeadForAgent(setLeadStatus);
+    @PostMapping("/setlead/{id}")
+    public TMSResponse<Boolean> createScheduleUpdate(@PathVariable int id,@Valid @RequestBody SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        if (id != setLeadStatus.getSetLeadFresh().getLeadId()) {
+            ApiValidatorError validatorError = ApiValidatorError.builder()
+                    .field("id")
+                    .rejectValue(id != setLeadStatus.getSetLeadFresh().getLeadId())
+                    .message(MessageConst.NOT_MATCH_VALUE_IN_URL)
+                    .build();
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
+        }
+        boolean result = getLeadForAgentservice.UpdLead(id,setLeadStatus);
         return TMSResponse.buildResponse(result);
     }
 }

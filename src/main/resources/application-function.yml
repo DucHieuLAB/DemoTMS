@@ -10,6 +10,7 @@ db-configs:
       always-write-file: false
     - func-name: "upd_schedule_update"
       always-write-file: false
+      always-write-file: false
     - func-name: "get_lead_for_agent_urgent"
       q-mode: "db"
       q-timeout: [5, 3]
@@ -38,7 +39,7 @@ db-configs:
       q-fallback: true
     - func-name: "update_lead_for_agent"
       always-write-file: false
-    - func-name: "ins_lead_for_agent_callback"
+    - func-name: "ins_cl_callback_v6"
       always-write-file: false
     - func-name: "upd_lead_for_agent_callback"
       always-write-file: false
@@ -50,6 +51,9 @@ db-configs:
       always-write-file: false
     - func-name: "del_cl_callback"
       always-write-file: false
+    - func-name: "get_lead_by_id"
+      q-mode: "db"
+      q-timeout: [5, 3]
 
     # END SCHEDULE UPDATE
 

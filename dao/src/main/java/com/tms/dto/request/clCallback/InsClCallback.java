@@ -15,9 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Pattern(regexp = DaoConst.DATE_TIME_REGEX, message = "{date.Pattern.message}")
 public class InsClCallback {
-       private Integer leadId;
+    private Integer leadId;
     private Integer agcId;
     private String agcCode;
     private Integer orgId;
@@ -43,7 +42,9 @@ public class InsClCallback {
     private String userDefin02;
     private String userDefin03;
     private String userDefin04;
-    private JsonNode attribute;
+    private String userDefin05;
+    private String attribute;
+    @Pattern(regexp = DaoConst.DATE_TIME_REGEX, message = "{date.Pattern.message}")
     private String callbackTime;
     @Pattern(regexp = DaoConst.DATE_TIME_REGEX, message = "{date.Pattern.message}")
     private String requestTime;
@@ -67,11 +68,13 @@ public class InsClCallback {
     private String otherPhone4;
     private String otherName5;
     private String otherPhone5;
+    @Pattern(regexp = DaoConst.DATE_TIME_REGEX, message = "{date.Pattern.message}")
     private String lastCallTime;
+    @Pattern(regexp = DaoConst.DATE_TIME_REGEX, message = "{date.Pattern.message}")
     private String nextCallTime;
     private Integer numberOfDay;
     private Integer attemptBusy;
-    private Integer attemptNoans;
+    private Integer attemptNoAns;
     private Integer attemptUnreachable;
     private Integer attemptOther1;
     private Integer attemptOther2;
@@ -84,7 +87,7 @@ public class InsClCallback {
     private String subid3;
     private String subid4;
     private String subid5;
-    private String networkid;
+    private String networkId;
     private String pid;
     private String trackingUrlId;
     private String offerId;
@@ -97,6 +100,8 @@ public class InsClCallback {
     private String customerComment;
     private String internalComment;
     private String carrierComment;
+    @Pattern(regexp = DaoConst.DATE_REGEX, message = "{date.Pattern.message}")
     private String closeTime;
+   @Pattern(regexp = DaoConst.DATE_REGEX, message = "{date.Pattern.message}")
     private String maxCloseTime;
 }

@@ -18,6 +18,7 @@ import com.tms.api.service.GetLeadForAgentService;
 import com.tms.commons.DBResponse;
 import com.tms.dao.ClCallbackDao;
 import com.tms.dao.ClFreshGetLeadForagen;
+import com.tms.dto.request.ClFreshGetLead.GetLeadById;
 import com.tms.dto.request.ClFreshGetLead.GetLeadfor;
 import com.tms.dto.request.ClFreshGetLead.SetLeadFresh;
 import com.tms.dto.request.ClFreshGetLead.SetLeadStatus;
@@ -81,8 +82,15 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
         return result.getResult();
     }
     @Override 
-    public boolean setLeadForAgent(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-
+    public boolean UpdLead(int id,SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        GetLeadById getLeadById = new GetLeadById(id);
+        
+        DBResponse<List<GetLeadForAgentDto>> result = clFreshGetLeadForagen.getLeadById(sessionId, getLeadById);
+        System.out.println("dayyyyyyyyyyyyyyyyyyyyyyy"+result.getResult().size());
+        if (CollectionUtils.isEmpty(result.getResult())) {
+            throw new TMSEntityNotFoundException(ErrorMessages.NOT_FOUND);
+        }
+        
       validateStatus(setLeadStatus);
   
       if (setLeadStatus.getSetLeadFresh().getLeadStatus() == EnumType.LeadStatus.TRASH.getStatus() || setLeadStatus.getSetLeadFresh().getLeadStatus() == EnumType.LeadStatus.REJECTED.getStatus()) {
@@ -101,7 +109,7 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
           handleApproved(setLeadStatus);
       }
   
-      return false;
+      return true;
   }
     
     private void validateStatus(SetLeadStatus setLeadStatus) {
@@ -119,24 +127,25 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
       }
   }
     
-    private void handleTrashAndRejected(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-    SetLeadFresh setLeadFresh =new  SetLeadFresh();  
-     PropertyUtils.copyProperties(setLeadFresh,setLeadStatus.getSetLeadFresh());
-       if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty()) {
-          throw new InputMismatchException("No reason has been added for the above status");
-      }
-  
-      DBResponse<String> setLead = clFreshGetLeadForagen.setlead(sessionId, setLeadFresh);
-  
-      if (setLead.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
-          throw new TMSDbException(setLead.getErrorMsg());
-      }
-  }
+  private void handleTrashAndRejected(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+    SetLeadFresh setLeadFresh = new SetLeadFresh();
+    PropertyUtils.copyProperties(setLeadFresh, setLeadStatus.getSetLeadFresh());
+    
+    if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty()) {
+        throw new InputMismatchException("No reason has been added for the above status");
+    }
+    
+    DBResponse<String> setLead = clFreshGetLeadForagen.setlead(sessionId, setLeadFresh);
+    
+    if (setLead.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
+        throw new TMSDbException(setLead.getErrorMsg());
+    }
+}
 
      private void handleBusyNoAnswerUnreachable(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
      SetLeadFresh setLeadFresh =new  SetLeadFresh();  
      PropertyUtils.copyProperties(setLeadFresh,setLeadStatus.getSetLeadFresh());
-      DBResponse<String> setLead = clFreshGetLeadForagen.setlead(sessionId, setLeadFresh);
+     DBResponse<String> setLead = clFreshGetLeadForagen.setlead(sessionId, setLeadFresh);
   
       if (setLead.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
           throw new TMSDbException(setLead.getErrorMsg());
@@ -165,37 +174,43 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
                 if (delcalback.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
           throw new TMSDbException(delcalback.getErrorMsg());
       }
-          DBResponse<String> setcalback = clFreshGetLeadForagen.setLeadForAgentCallback(sessionId, insClCallback);
+          DBResponse<String> setcalback = clCallbackDao.InsClCallback(sessionId, insClCallback);
   
           if (setcalback.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
               throw new TMSDbException(setcalback.getErrorMsg());
           }
       }
 
-  private void handleApproved(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-      if (setLeadStatus.getSetLeadFresh().getAddress().isEmpty() || setLeadStatus.getSetLeadFresh().getAddress() == null ) {
-          throw new InputMismatchException("No address has been entered for the status");
-      }
-  
-      if (setLeadStatus.getSoSaleOderInsert().getLeadPhone().isEmpty() ||setLeadStatus.getSoSaleOderInsert().getLeadPhone() == null ){
-          throw new InputMismatchException("No phone has been entered for the status");
-      }
-  
-      if (setLeadStatus.getSetLeadFresh().getProdId() == null) {
-          throw new InputMismatchException("No product has been entered for the status");
-      }
-      if (setLeadStatus.getSoSaleOderInsert().getPaymentMethod() == null) {
-          throw new InputMismatchException("No product has been entered for the status");
-      }
-          SetLeadFresh setLeadFresh =new  SetLeadFresh();  
-     PropertyUtils.copyProperties(setLeadFresh,setLeadStatus.getSetLeadFresh());
-      SoSaleOderInsert soSaleOderInsert = new SoSaleOderInsert();
-       PropertyUtils.copyProperties(soSaleOderInsert,setLeadStatus.getSoSaleOderInsert());
-      DBResponse<String> insso = clFreshGetLeadForagen.insSoSaleOder(sessionId, soSaleOderInsert);
-      DBResponse<String> approve = clFreshGetLeadForagen.setlead(sessionId, setLeadFresh);
-  
-      if (approve.getErrorCode() != DbStatusResp.SUCCESS.getStatus() || insso.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
-          throw new TMSDbException(approve.getErrorMsg());
-      }
-  }
+      private void handleApproved(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        if (setLeadStatus.getSetLeadFresh().getAddress().isEmpty() || setLeadStatus.getSetLeadFresh().getAddress() == null) {
+            throw new InputMismatchException("No address has been entered for the status");
+        }
+    
+        if (setLeadStatus.getSoSaleOderInsert().getLeadPhone().isEmpty() || setLeadStatus.getSoSaleOderInsert().getLeadPhone() == null) {
+            throw new InputMismatchException("No phone has been entered for the status");
+        }
+    
+        if (setLeadStatus.getSetLeadFresh().getProdId() == null) {
+            throw new InputMismatchException("No product has been entered for the status");
+        }
+        if (setLeadStatus.getSoSaleOderInsert().getPaymentMethod() == null) {
+            throw new InputMismatchException("No payment method has been entered for the status");
+        }
+    
+        SetLeadFresh setLeadFresh = new SetLeadFresh();
+        PropertyUtils.copyProperties(setLeadFresh, setLeadStatus.getSetLeadFresh());
+    
+        SoSaleOderInsert soSaleOderInsert = new SoSaleOderInsert();
+        PropertyUtils.copyProperties(soSaleOderInsert, setLeadStatus.getSoSaleOderInsert());
+    
+        DBResponse<String> insSo = clFreshGetLeadForagen.insSoSaleOder(sessionId, soSaleOderInsert);
+        if (insSo.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
+            throw new TMSDbException(insSo.getErrorMsg());
+        }
+    
+        DBResponse<String> approve = clFreshGetLeadForagen.setlead(sessionId, setLeadFresh);
+        if (approve.getErrorCode() != DbStatusResp.SUCCESS.getStatus() || insSo.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
+            throw new TMSDbException(approve.getErrorMsg());
+        }
+    }
 }

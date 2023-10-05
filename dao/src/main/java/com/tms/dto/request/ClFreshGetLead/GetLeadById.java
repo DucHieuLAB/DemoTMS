@@ -12,9 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class GetLeadfor {
-    private Integer agentId;
-    private Integer addLimit;
-    private Integer dayCall;
-    private Integer totalCall;
+public class GetLeadById {
+   private Integer leadId;
 }
