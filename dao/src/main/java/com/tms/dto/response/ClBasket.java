@@ -65,16 +65,16 @@ public class ClBasket implements Comparable<ClBasket>{
     private Integer trackerId;
     private String ipAddress;
 
-    public static ClFresh toInsLeadAfterFillter(ClBasket basket){
-        ClFresh CLFresh = new ClFresh();
-        CLFresh.setLeadId(basket.leadId);
-        CLFresh.setName(basket.name);
-        CLFresh.setPhone(basket.getPhone());
-        CLFresh.setProdId(basket.getProdId());
-        CLFresh.setLeadStatus(basket.getStatus());
-        CLFresh.setComment(basket.getComment());
-        return CLFresh;
-    }
+    // public static ClFresh toInsLeadAfterFillter(ClBasket basket){
+    //     ClFresh CLFresh = new ClFresh();
+    //     CLFresh.setLeadId(basket.leadId);
+    //     CLFresh.setName(basket.name);
+    //     CLFresh.setPhone(basket.getPhone());
+    //     CLFresh.setProdId(basket.getProdId());
+    //     CLFresh.setLeadStatus(basket.getStatus());
+    //     CLFresh.setComment(basket.getComment());
+    //     return CLFresh;
+    // }
 
     @Override
     public String toString() {

@@ -6,7 +6,6 @@ import com.tms.dto.request.ClFreshGetLead.GetLeadfor;
 import com.tms.dto.request.ClFreshGetLead.SetLeadStatus;
 import com.tms.dto.request.clFresh.InsClFresh;
 import com.tms.dto.request.clFresh.UpdClFresh;
-import com.tms.dto.request.schedule.UpdScheduleUpdate;
 import com.tms.dto.response.GetLeadForAgentDto;
 
 import java.lang.reflect.InvocationTargetException;

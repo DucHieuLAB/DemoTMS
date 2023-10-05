@@ -1,7 +1,5 @@
 package com.tms.dto.response;
 
-import com.tms.DaoConst;
-import jdk.vm.ci.meta.Local;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

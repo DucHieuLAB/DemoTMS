@@ -5,7 +5,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GetLeadForAgentDto  implements Serializable {
- private Integer leadId;
+    private Integer leadId;
     private Integer cpId;
     private Integer callinglistId;
     private Integer agcId;

@@ -1,8 +1,8 @@
 app:
   datasource:
-    url: "jdbc:postgresql://127.0.0.1:5555/tms_vietnam"
-    username: "tms_admin"
-    password: "Usfy3siOO%fX"
+    url: "jdbc:postgresql://127.0.0.1:5555/dev_tms"
+    username: "postgres"
+    password: "Oceantech@123"
     hikari-config:
       pool-name: app-pool
       maximum-pool-size: 30
