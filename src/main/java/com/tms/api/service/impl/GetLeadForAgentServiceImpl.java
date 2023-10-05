@@ -18,6 +18,7 @@ import com.tms.api.service.GetLeadForAgentService;
 import com.tms.commons.DBResponse;
 import com.tms.dao.ClCallbackDao;
 import com.tms.dao.ClFreshGetLeadForagen;
+import com.tms.dto.request.ClFreshGetLead.GetLeadById;
 import com.tms.dto.request.ClFreshGetLead.GetLeadfor;
 import com.tms.dto.request.ClFreshGetLead.SetLeadFresh;
 import com.tms.dto.request.ClFreshGetLead.SetLeadStatus;
@@ -81,8 +82,15 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
         return result.getResult();
     }
     @Override 
-    public boolean UpdLead(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-
+    public boolean UpdLead(int id,SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        GetLeadById getLeadById = new GetLeadById(id);
+        
+        DBResponse<List<GetLeadForAgentDto>> result = clFreshGetLeadForagen.getLeadById(sessionId, getLeadById);
+        System.out.println("dayyyyyyyyyyyyyyyyyyyyyyy"+result.getResult().size());
+        if (CollectionUtils.isEmpty(result.getResult())) {
+            throw new TMSEntityNotFoundException(ErrorMessages.NOT_FOUND);
+        }
+        
       validateStatus(setLeadStatus);
   
       if (setLeadStatus.getSetLeadFresh().getLeadStatus() == EnumType.LeadStatus.TRASH.getStatus() || setLeadStatus.getSetLeadFresh().getLeadStatus() == EnumType.LeadStatus.REJECTED.getStatus()) {
@@ -101,7 +109,7 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
           handleApproved(setLeadStatus);
       }
   
-      return false;
+      return true;
   }
     
     private void validateStatus(SetLeadStatus setLeadStatus) {

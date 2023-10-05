@@ -50,6 +50,9 @@ db-configs:
       always-write-file: false
     - func-name: "del_cl_callback"
       always-write-file: false
+    - func-name: "get_lead_by_id"
+      q-mode: "db"
+      q-timeout: [5, 3]
 
     # END SCHEDULE UPDATE
 

@@ -10,5 +10,5 @@ public interface GetLeadForAgentService {
 
     List<GetLeadForAgentDto> getLeadforagent(GetLeadfor getLeadfor) throws TMSException;
     
-    boolean UpdLead(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException;    
+    boolean UpdLead(int id,SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException;    
 }
