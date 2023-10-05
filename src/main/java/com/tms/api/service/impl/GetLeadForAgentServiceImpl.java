@@ -84,7 +84,6 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
     @Override 
     public boolean updLead(int id,SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         GetLeadById getLeadById = new GetLeadById(id);
-        
         DBResponse<List<GetLeadForAgentDto>> result = clFreshGetLeadForagen.getLeadById(sessionId, getLeadById);
         if (CollectionUtils.isEmpty(result.getResult())) {
             throw new TMSEntityNotFoundException(ErrorMessages.NOT_FOUND);
@@ -212,4 +211,5 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
             throw new TMSDbException(approve.getErrorMsg());
         }
     }
+
 }
