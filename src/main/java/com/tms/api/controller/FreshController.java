@@ -31,10 +31,9 @@ public class FreshController {
         this.getLeadForAgentService = getLeadForAgentservice;
         this.clFreshService = clFreshService;
     }
-
-    @PostMapping("/getlead")
-    public TMSResponse<List<GetLeadForAgentDto>> getLead(@Valid @RequestBody GetLeadfor getLeadfor) throws TMSException {
-        List<GetLeadForAgentDto> result = getLeadForAgentService.getLeadForAgent(getLeadfor);
+     @PostMapping("/getlead")
+    public TMSResponse<List<GetLeadForAgentDto>> getLead(@Valid @RequestBody GetLeadfor getLeadfor )throws TMSException{
+        List<GetLeadForAgentDto> result= getLeadForAgentService.getLeadForAgent(getLeadfor);
         return TMSResponse.buildResponse(result);
     }
 
@@ -49,21 +48,6 @@ public class FreshController {
             throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
         }
         boolean result = getLeadForAgentService.updLead(id,setLeadStatus);
-        return TMSResponse.buildResponse(result);
-    }
-
-    @PutMapping("fresh/{id}")
-    public TMSResponse<Boolean> updateClFresh(@PathVariable int id,
-                                              @Valid @RequestBody UpdClFresh updClFresh) throws TMSException {
-        if (id != updClFresh.getLeadId()) {
-            ApiValidatorError validatorError = ApiValidatorError.builder()
-                    .field("id")
-                    .rejectValue(updClFresh.getLeadId())
-                    .message(MessageConst.NOT_MATCH_VALUE_IN_URL)
-                    .build();
-            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
-        }
-        boolean result = clFreshService.updClFreshAfterValidSO(id,updClFresh);
         return TMSResponse.buildResponse(result);
     }
 }
