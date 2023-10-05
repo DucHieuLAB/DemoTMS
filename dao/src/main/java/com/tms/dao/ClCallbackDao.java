@@ -3,7 +3,6 @@ package com.tms.dao;
 import org.springframework.stereotype.Service;
 
 import com.tms.commons.DBResponse;
-import com.tms.dto.request.ClFreshGetLead.SoSaleOderInsert;
 import com.tms.dto.request.clCallback.DelClCallback;
 import com.tms.dto.request.clCallback.InsClCallback;
 
