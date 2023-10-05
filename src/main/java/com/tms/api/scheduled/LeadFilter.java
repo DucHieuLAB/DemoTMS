@@ -43,25 +43,25 @@ public class LeadFilter extends BaseService {
 
     private final String LOCAL_TIME_ZONE ="Asia/Ho_Chi_Minh";
 
-    @Scheduled(cron = "0 24 10 * * *", zone = "Asia/Ho_Chi_Minh")
-    public void filterLead() throws TMSDbException {
-        // Get Data To Process
-        List<ClBasket> clBaskets = clBasketService.getListToProcess(sessionId);
-        List<CfBlackList> blackLists = backListService.getBlackList(sessionId);
-        LocalDateTime time = findMinimumCreateDate(clBaskets);
-        List<ClBasket> leadsInRange = clBasketService.getLeadInTimeRange(time,time.minus(24, ChronoUnit.HOURS));
-        List<CampaignInf> campaignInfs = campaignService.getCampainInfs(EnumType.Campaign.CALLING_LIST.getType());
+    // @Scheduled(cron = "0 24 10 * * *", zone = "Asia/Ho_Chi_Minh")
+    // public void filterLead() throws TMSDbException {
+    //     // Get Data To Process
+    //     List<ClBasket> clBaskets = clBasketService.getListToProcess(sessionId);
+    //     List<CfBlackList> blackLists = backListService.getBlackList(sessionId);
+    //     LocalDateTime time = findMinimumCreateDate(clBaskets);
+    //     List<ClBasket> leadsInRange = clBasketService.getLeadInTimeRange(time,time.minus(24, ChronoUnit.HOURS));
+    //     List<CampaignInf> campaignInfs = campaignService.getCampainInfs(EnumType.Campaign.CALLING_LIST.getType());
 
-        Collections.sort(clBaskets);
+    //     Collections.sort(clBaskets);
 
-        filterInvalidPhonesAndBlackListAndListInRage(clBaskets,blackLists,leadsInRange);
+    //     filterInvalidPhonesAndBlackListAndListInRage(clBaskets,blackLists,leadsInRange);
 
-        clBasketService.updateClBasket(clBaskets,sessionId,LOCAL_TIME_ZONE);
+    //     clBasketService.updateClBasket(clBaskets,sessionId,LOCAL_TIME_ZONE);
 
-        List<InsClFresh> clFreshes = ClFreshConverter.convertToInsClFreshs(clBaskets);
-        updateCampaignInf(clFreshes,campaignInfs);
-        clFreshService.insertClFresh(clFreshes,sessionId);
-    }
+    //     List<InsClFresh> clFreshes = ClFreshConverter.convertToInsClFreshs(clBaskets);
+    //     updateCampaignInf(clFreshes,campaignInfs);
+    //     clFreshService.insertClFresh(clFreshes,sessionId);
+    // }
 
     public static LocalDateTime findMinimumCreateDate(List<ClBasket> leadBaskets) {
         if (leadBaskets == null || leadBaskets.isEmpty()) {
