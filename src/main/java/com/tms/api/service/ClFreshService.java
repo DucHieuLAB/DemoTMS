@@ -12,11 +12,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public interface ClFreshService {
-    public void insertClFresh(List<InsClFresh> clFreshes, String sessionId) throws TMSDbException;
+    void insertClFresh(List<InsClFresh> clFreshes, String sessionId) throws TMSDbException;
 
-    boolean updClFreshAfterValidSO(int leadId, UpdClFresh updClFresh) throws TMSDbException;
-    
+    boolean updClFreshAfterValidSaleOrder(UpdClFresh updClFresh) throws TMSDbException;
+
     List<GetLeadForAgentDto> getLeadForAgent(GetLeadfor getLeadfor) throws TMSException;
 
-    boolean updLead(int id,SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException;
+    boolean updLead(int id, SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException;
 }

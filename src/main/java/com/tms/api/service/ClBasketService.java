@@ -11,11 +11,11 @@ import java.util.List;
 @Service
 public interface ClBasketService {
 
-    public List<ClBasket> getListToFillter(GetLeadToFillter getLeadToFillter) throws TMSException;
+     List<ClBasket> getListToFillter(GetLeadToFillter getLeadToFillter) throws TMSException;
 
-    public List<ClBasket> getLeadInTimeRange(LocalDateTime StartTime,LocalDateTime EndTime)throws TMSDbException;
+     List<ClBasket> getLeadInTimeRange(LocalDateTime StartTime,LocalDateTime EndTime)throws TMSDbException;
 
-    public List<ClBasket> getListToProcess(String sessionId) throws TMSDbException;
+     List<ClBasket> getListToProcess(String sessionId) throws TMSDbException;
 
-    public void updateClBasket(List<ClBasket> clBaskets, String sessionId ,String TimeZone) throws TMSDbException;
+     void updateClBasket(List<ClBasket> clBaskets, String sessionId ,String TimeZone) throws TMSDbException;
 }

@@ -8,7 +8,6 @@ import com.tms.commons.DBResponse;
 import com.tms.dao.OdDoNewDao;
 import com.tms.dto.request.odDoNew.InsDeliveryOrder;
 import com.tms.dto.request.odDoNew.InsDeliveryOrderQuery;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,35 +25,34 @@ public class DeliveryOrderServiceImpl extends BaseService implements DeliveryOrd
         if (insDeliveryOrder.getStatus() == null){
             insDeliveryOrder.setStatus(EnumType.DeliveryOrder.NEW.getStatus());
         }
-        DBResponse<String> stringDBResponse =  odDoNewDao.insDeliveryOrder(sessionId,insDeliveryOrder);
-        if (stringDBResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
-            throw new TMSDbException(stringDBResponse.getErrorMsg());
+        DBResponse<String> stringDbResponse =  odDoNewDao.insDeliveryOrder(sessionId,insDeliveryOrder);
+        if (stringDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
+            throw new TMSDbException(stringDbResponse.getErrorMsg());
         }
         return true;
     }
 
     @Override
     public boolean insertDeliveryOrders(List<InsDeliveryOrder> insDeliveryOrders) throws TMSDbException {
-        String values = "VALUES";
+        StringBuilder valuesBuilder = new StringBuilder("VALUES");
         for (InsDeliveryOrder insDeliveryOrder : insDeliveryOrders) {
             if (insDeliveryOrder.getStatus() == null){
                 insDeliveryOrder.setStatus(EnumType.DeliveryOrder.NEW.getStatus());
             }
-            values = values + insDeliveryOrder.convertToValueQuery();
+            valuesBuilder.append(insDeliveryOrder.convertToValueQuery());
             //check if insClFreshs is last element
             if (insDeliveryOrder == insDeliveryOrders.get(insDeliveryOrders.size() - 1)) {
                 continue;
             }
-            values = values + ",";
+            valuesBuilder.append(",");
         }
-        logger.info(values);
-        InsDeliveryOrderQuery insDeliveryOrderQuery = new InsDeliveryOrderQuery(values);
-        DBResponse<String> stringDBResponse = odDoNewDao.insDeliveryOrders(sessionId, insDeliveryOrderQuery);
-        if (stringDBResponse == null){
+        InsDeliveryOrderQuery insDeliveryOrderQuery = new InsDeliveryOrderQuery(valuesBuilder.toString());
+        DBResponse<String> stringDbResponse = odDoNewDao.insDeliveryOrders(sessionId, insDeliveryOrderQuery);
+        if (stringDbResponse == null){
             throw new TMSDbException("Can't add new delivery order ");
         }
-        if(stringDBResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
-            throw new TMSDbException(stringDBResponse.getErrorMsg());
+        if(stringDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
+            throw new TMSDbException(stringDbResponse.getErrorMsg());
         }
         return true;
     }

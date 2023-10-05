@@ -20,24 +20,18 @@ public class CampaignServiceImpl extends BaseService implements CampaignService 
         this.campaignDao = campaignDao;
     }
 
-    // @Override
-    // public List<CampaignInf> getCampainInfs(Integer campaignStatus) throws TMSDbException {
-    //     GetCampaignInf getCampaignInf = new GetCampaignInf();
-    //     getCampaignInf.setType(campaignStatus);
-    //     DBResponse<List<CampaignInf>> campaignDbres = campaignDao.getCampaignInf(sessionId,getCampaignInf);
-    //     if (campaignDbres == null || campaignDbres.getResult().size() == 0){
-    //         throw new TMSDbException("Can't get campaign info");
-    //     }
-    //     if(campaignDbres.getErrorCode()!= EnumType.DbStatusResp.SUCCESS.getStatus()){
-    //         throw new TMSDbException(campaignDbres.getErrorMsg());
-    //     }
-    //     return campaignDbres.getResult();
-    // }
-
-    @Override
-    public List<CampaignInf> getCampainInfs(Integer campaign_status, String sessionId) throws TMSDbException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCampainInfs'");
-    }
+     @Override
+     public List<CampaignInf> getCampainInfs(Integer campaignStatus) throws TMSDbException {
+         GetCampaignInf getCampaignInf = new GetCampaignInf();
+         getCampaignInf.setType(campaignStatus);
+         DBResponse<List<CampaignInf>> campaignDbres = campaignDao.getCampaignInf(sessionId,getCampaignInf);
+         if (campaignDbres == null || campaignDbres.getResult().size() == 0){
+             throw new TMSDbException("Can't get campaign info");
+         }
+         if(campaignDbres.getErrorCode()!= EnumType.DbStatusResp.SUCCESS.getStatus()){
+             throw new TMSDbException(campaignDbres.getErrorMsg());
+         }
+         return campaignDbres.getResult();
+     }
 
 }

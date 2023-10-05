@@ -7,7 +7,7 @@ import com.tms.dto.request.odDoNew.InsDeliveryOrder;
 import java.util.List;
 
 public interface DeliveryOrderService {
-    public boolean insertDeliveryOrder(InsDeliveryOrder insDeliveryOrder) throws TMSDbException;
+     boolean insertDeliveryOrder(InsDeliveryOrder insDeliveryOrder) throws TMSDbException;
 
-    public boolean insertDeliveryOrders(List<InsDeliveryOrder> insDeliveryOrderList) throws TMSDbException;
+     boolean insertDeliveryOrders(List<InsDeliveryOrder> insDeliveryOrderList) throws TMSDbException;
 }

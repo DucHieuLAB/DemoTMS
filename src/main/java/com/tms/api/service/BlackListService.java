@@ -5,6 +5,6 @@ import com.tms.dto.response.CfBlackList;
 
 import java.util.List;
 
-public interface BackListService {
-    public List<CfBlackList> getBlackList(String sessionId) throws TMSDbException;
+public interface BlackListService {
+    List<CfBlackList> getBlackList() throws TMSDbException;
 }
