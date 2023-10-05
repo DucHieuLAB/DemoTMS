@@ -1,7 +1,4 @@
 package com.tms.dto.request.ClFreshGetLead;
-
-import java.math.BigDecimal;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;

@@ -3,7 +3,6 @@ package com.tms.dto.request.clCallback;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.tms.DaoConst;
 
 import lombok.AllArgsConstructor;

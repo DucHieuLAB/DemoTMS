@@ -86,7 +86,6 @@ public class GetLeadForAgentServiceImpl extends BaseService implements GetLeadFo
         GetLeadById getLeadById = new GetLeadById(id);
         
         DBResponse<List<GetLeadForAgentDto>> result = clFreshGetLeadForagen.getLeadById(sessionId, getLeadById);
-        System.out.println("dayyyyyyyyyyyyyyyyyyyyyyy"+result.getResult().size());
         if (CollectionUtils.isEmpty(result.getResult())) {
             throw new TMSEntityNotFoundException(ErrorMessages.NOT_FOUND);
         }
