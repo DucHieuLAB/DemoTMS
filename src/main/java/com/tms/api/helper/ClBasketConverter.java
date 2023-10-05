@@ -63,7 +63,6 @@ public class ClBasketConverter {
                     updClBasket.setDuplicateTime(clBasket.getDuplicateTime());
                     updClBasket.setTrackerId(clBasket.getTrackerId());
                     updClBasket.setIpAddress(clBasket.getIpAddress());
-
                     return updClBasket;
                 })
                 .collect(Collectors.toList());

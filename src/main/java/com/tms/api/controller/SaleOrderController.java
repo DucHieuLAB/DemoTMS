@@ -24,21 +24,11 @@ public class SaleOrderController {
         this.saleOrderService = saleOrderService;
     }
 
-    @PutMapping("/{id}")
-    public TMSResponse<Boolean> updateSaleOrder(@PathVariable int id,
-                                                @Valid @RequestBody UpdSaleOrder updSaleOrder) throws TMSException {
-        if (id != updSaleOrder.getSoId()) {
-            ApiValidatorError validatorError = ApiValidatorError.builder()
-                    .field("id")
-                    .rejectValue(updSaleOrder.getSoId())
-                    .message(MessageConst.NOT_MATCH_VALUE_IN_URL)
-                    .build();
-            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
-        }
-        boolean result = saleOrderService.updSaleOrder(id, updSaleOrder);
+    @PutMapping("")
+    public TMSResponse<Boolean> updateSaleOrder(@Valid @RequestBody UpdSaleOrder updSaleOrder) throws TMSException {
+        boolean result = saleOrderService.updSaleOrder(updSaleOrder);
         return TMSResponse.buildResponse(result);
     }
-
 
 
 }

@@ -3,10 +3,6 @@ package com.tms.api.controller;
 import java.util.List;
 import javax.validation.Valid;
 
-import com.tms.api.commons.ApiValidatorError;
-import com.tms.api.consts.MessageConst;
-import com.tms.api.exception.ErrorMessages;
-import com.tms.api.exception.TMSInvalidInputException;
 import com.tms.api.service.ClFreshService;
 import com.tms.dto.request.clFresh.UpdClFresh;
 import org.springframework.web.bind.annotation.*;
@@ -43,18 +39,10 @@ public class FreshController {
         return TMSResponse.buildResponse(result);
     }
 
-    @PutMapping("fresh/{id}")
-    public TMSResponse<Boolean> updateClFresh(@PathVariable int id,
+    @PutMapping("fresh")
+    public TMSResponse<Boolean> updateClFresh(
                                               @Valid @RequestBody UpdClFresh updClFresh) throws TMSException {
-        if (id != updClFresh.getLeadId()) {
-            ApiValidatorError validatorError = ApiValidatorError.builder()
-                    .field("id")
-                    .rejectValue(updClFresh.getLeadId())
-                    .message(MessageConst.NOT_MATCH_VALUE_IN_URL)
-                    .build();
-            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
-        }
-        boolean result = clFreshService.updClFreshAfterValidSO(id,updClFresh);
+        boolean result = clFreshService.updClFreshAfterValidSaleOrder(updClFresh);
         return TMSResponse.buildResponse(result);
     }
 }

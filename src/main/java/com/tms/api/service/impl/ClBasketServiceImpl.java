@@ -18,7 +18,6 @@ import com.tms.api.service.ClBasketService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,18 +32,18 @@ public class ClBasketServiceImpl extends BaseService implements ClBasketService 
 
     @Override
     public List<ClBasket> getListToFillter(GetLeadToFillter getLeadToFillter) throws TMSException{
-        DBResponse<List<ClBasket>> listDBResponse = clBasketDao.getLeadUpdate(sessionId,getLeadToFillter);
-        if(listDBResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
-            throw new TMSDbException(listDBResponse.getErrorMsg());
+        DBResponse<List<ClBasket>> listDbResponse = clBasketDao.getLeadUpdate(sessionId,getLeadToFillter);
+        if(listDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
+            throw new TMSDbException(listDbResponse.getErrorMsg());
         }
-        return listDBResponse.getResult();
+        return listDbResponse.getResult();
     }
 
     @Override
-    public List<ClBasket> getLeadInTimeRange(LocalDateTime StartTime,LocalDateTime EndTime) throws TMSDbException {
+    public List<ClBasket> getLeadInTimeRange(LocalDateTime startTime,LocalDateTime endTime) throws TMSDbException {
         GetLeadBasketsInTimeRange getLeadBasketsInTimeRange = new GetLeadBasketsInTimeRange();
-        getLeadBasketsInTimeRange.setEndTime(DateHelper.toDateTime(EndTime));
-        getLeadBasketsInTimeRange.setStartTime(DateHelper.toDateTime(StartTime));
+        getLeadBasketsInTimeRange.setEndTime(DateHelper.toDateTime(endTime));
+        getLeadBasketsInTimeRange.setStartTime(DateHelper.toDateTime(startTime));
         DBResponse<List<ClBasket>>  leadsInRange = clBasketDao.getLeadBasketsInTimeRange(sessionId,getLeadBasketsInTimeRange);
         // Check Exception
         if (leadsInRange == null || leadsInRange.getResult().size() == 0){
@@ -62,7 +61,7 @@ public class ClBasketServiceImpl extends BaseService implements ClBasketService 
         getLeadToFillter.setInAttribute3(EnumType.Filltter.GET_LEAD_FILLTER_VALUE.getValue());
         DBResponse<List<ClBasket>> leadBaskets  = clBasketDao.getLeadUpdate(sessionId, getLeadToFillter);
         if (leadBaskets ==null || leadBaskets.getResult().size() == 0){
-            throw new TMSDbException("No lead baskets to process.");
+            return new ArrayList<>();
         }
         if(leadBaskets.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
             throw new TMSDbException(leadBaskets.getErrorMsg());
@@ -71,13 +70,13 @@ public class ClBasketServiceImpl extends BaseService implements ClBasketService 
     }
 
     @Override
-    public void updateClBasket(List<ClBasket> clBaskets, String sessionId, String TimeZone) throws TMSDbException {
+    public void updateClBasket(List<ClBasket> clBaskets, String sessionId, String timeZone) throws TMSDbException {
         List<UpdClBasket> updClBaskets = ClBasketConverter.convertToUpdClBasketList(clBaskets);
         String json = Helper.convertListToJson(updClBaskets);
         UpdClBaskets baskets = new UpdClBaskets();
         baskets.setJson(json);
-        if (TimeZone.length() == 0 || TimeZone.isEmpty()) {
-            baskets.setTimeZone(TimeZone);
+        if (timeZone == null || timeZone.isEmpty()) {
+            baskets.setTimeZone(timeZone);
         }
         DBResponse<String> resultUpdate = clBasketDao.updClBasketAfterFillter(sessionId, baskets);
         if (resultUpdate.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {

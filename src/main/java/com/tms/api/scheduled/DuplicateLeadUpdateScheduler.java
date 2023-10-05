@@ -18,8 +18,8 @@ public class DuplicateLeadUpdateScheduler {
         this.clBasketService = clBasketService;
     }
 
-    @Scheduled(cron = "0 30 * * * *")
-    public void updateUsersInLast24Hours() throws TMSDbException {
+    @Scheduled(cron = "0 30 * * * *", zone = "Asia/Ho_Chi_Minh"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      )
+    public void updateLeadInLast24Hours() throws TMSDbException {
         LocalDateTime time = LocalDateTime.now();
         List<ClBasket> leadsInRange = clBasketService.getLeadInTimeRange(time,time.minus(24, ChronoUnit.HOURS));
         DuplicateLeadChecker.clearRecords();

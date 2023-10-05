@@ -1,17 +1,14 @@
 package com.tms.api.service.impl;
 
 import com.tms.api.consts.EnumType;
+import com.tms.api.consts.MessageConst;
 import com.tms.api.exception.TMSDbException;
 import com.tms.api.helper.Helper;
 import com.tms.api.service.BaseService;
-import com.tms.api.service.ClFreshService;
 import com.tms.api.service.SaleOrderService;
 import com.tms.commons.DBResponse;
 import com.tms.dao.OdSaleOrderDao;
-import com.tms.dto.request.saleOrder.GetSaleOrder;
-import com.tms.dto.request.saleOrder.UpdSaleOrder;
-import com.tms.dto.request.saleOrder.UpdSaleOrders;
-import com.tms.dto.request.saleOrder.ValidSaleOrder;
+import com.tms.dto.request.saleOrder.*;
 import com.tms.dto.response.SaleOrder;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +19,12 @@ import java.util.List;
 public class SaleOrderServiceImpl extends BaseService implements SaleOrderService {
     private final OdSaleOrderDao odSaleOrderDao;
 
-    public SaleOrderServiceImpl(OdSaleOrderDao odSaleOrderDao, ClFreshService clFreshService) {
+    public SaleOrderServiceImpl(OdSaleOrderDao odSaleOrderDao) {
         this.odSaleOrderDao = odSaleOrderDao;
     }
 
     @Override
-    public boolean updSaleOrder(int id, UpdSaleOrder updSaleOrder) throws TMSDbException {
+    public boolean updSaleOrder(UpdSaleOrder updSaleOrder) throws TMSDbException {
         updSaleOrder.setModifyBy(curUserId);
         UpdSaleOrders updSaleOrders = new UpdSaleOrders();
         List<UpdSaleOrder> updSaleOrders1 = new ArrayList<>();
@@ -43,14 +40,17 @@ public class SaleOrderServiceImpl extends BaseService implements SaleOrderServic
 
     @Override
     public List<SaleOrder> getSaleOrder(GetSaleOrder getSaleOrder) throws TMSDbException {
-        DBResponse<List<SaleOrder>> listDBResponse = odSaleOrderDao.getSaleOrder(sessionId,getSaleOrder);
-        if (listDBResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
-            throw new TMSDbException(listDBResponse.getErrorMsg());
+        DBResponse<List<SaleOrder>> listDbResponse = odSaleOrderDao.getSaleOrder(sessionId,getSaleOrder);
+        if (listDbResponse == null){
+            throw new TMSDbException(MessageConst.ERROL_NULL_DB_RESPONSE);
         }
-        if (listDBResponse.getResult() == null || listDBResponse.getResult().size() == 0){
+        if (listDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
+            throw new TMSDbException(listDbResponse.getErrorMsg());
+        }
+        if (listDbResponse.getResult() == null || listDbResponse.getResult().size() == 0){
             return null;
         }
-        return listDBResponse.getResult();
+        return listDbResponse.getResult();
     }
 
     @Override
@@ -58,6 +58,15 @@ public class SaleOrderServiceImpl extends BaseService implements SaleOrderServic
         DBResponse<String> updateSaleOrder = odSaleOrderDao.updateSaleOrder(sessionId, updSaleOrders);
         if (updateSaleOrder.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(updateSaleOrder.getErrorMsg());
+        }
+        return true;
+    }
+
+    @Override
+    public boolean insertSaleOrders(InsSaleOrderQuery insSaleOrderQuery) throws TMSDbException {
+        DBResponse<String> insertSaleOrders = odSaleOrderDao.insSaleOrders(sessionId,insSaleOrderQuery);
+        if (insertSaleOrders.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
+            throw new TMSDbException(insertSaleOrders.getErrorMsg());
         }
         return true;
     }

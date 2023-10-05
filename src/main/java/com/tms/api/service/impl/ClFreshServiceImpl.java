@@ -2,6 +2,7 @@ package com.tms.api.service.impl;
 
 
 import com.tms.api.consts.EnumType;
+import com.tms.api.consts.MessageConst;
 import com.tms.api.exception.TMSDbException;
 import com.tms.api.helper.Helper;
 import com.tms.api.service.BaseService;
@@ -28,27 +29,27 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
 
     @Override
     public void insertClFresh(List<InsClFresh> clFreshes, String sessionId) throws TMSDbException {
-        String values = "VALUES";
-        for (InsClFresh insClFreshs : clFreshes) {
-            values = values + insClFreshs.toString();
-            //check if insClFreshs is last element
-            if (insClFreshs == clFreshes.get(clFreshes.size() - 1)) {
+        StringBuilder valuesBuilder = new StringBuilder("VALUES");
+        for (InsClFresh insClFresh : clFreshes) {
+            valuesBuilder.append(insClFresh.toString());
+            //check if insClFresh is last element
+            if (insClFresh == clFreshes.get(clFreshes.size() - 1)) {
                 continue;
             }
-            values = values + ",";
+            valuesBuilder.append(",");
         }
-        InsClFreshsQuery insClFreshsQuery = new InsClFreshsQuery(values);
-        DBResponse<String> insClFreshDBResponse = clFreshDao.insClFresh(sessionId, insClFreshsQuery);
-        if (insClFreshDBResponse == null) {
-            throw new TMSDbException("Can't add new Cl Fresh");
+        InsClFreshsQuery insClFreshsQuery = new InsClFreshsQuery(valuesBuilder.toString());
+        DBResponse<String> insClFreshDbResponse = clFreshDao.insClFresh(sessionId, insClFreshsQuery);
+        if (insClFreshDbResponse == null) {
+            throw new TMSDbException(MessageConst.ERROL_NULL_DB_RESPONSE);
         }
-        if (insClFreshDBResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
-            throw new TMSDbException(insClFreshDBResponse.getErrorMsg());
+        if (insClFreshDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
+            throw new TMSDbException(insClFreshDbResponse.getErrorMsg());
         }
     }
 
     @Override
-    public boolean updClFreshAfterValidSO(int leadId, UpdClFresh updClFresh) throws TMSDbException {
+    public boolean updClFreshAfterValidSaleOrder(UpdClFresh updClFresh) throws TMSDbException {
         updClFresh.setModifyBy(curUserId);
         return updClFresh(sessionId,updClFresh);
     }

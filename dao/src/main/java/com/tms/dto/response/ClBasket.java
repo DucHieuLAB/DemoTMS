@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClBasket implements Comparable<ClBasket>{
+public class ClBasket {
     private Integer leadId;
     private Integer agcId;
     private String agcCode;
@@ -64,17 +64,6 @@ public class ClBasket implements Comparable<ClBasket>{
     private Integer duplicateTime;
     private Integer trackerId;
     private String ipAddress;
-
-    public static ClFresh toInsLeadAfterFillter(ClBasket basket){
-        ClFresh CLFresh = new ClFresh();
-        CLFresh.setLeadId(basket.leadId);
-        CLFresh.setName(basket.name);
-        CLFresh.setPhone(basket.getPhone());
-        CLFresh.setProdId(basket.getProdId());
-        CLFresh.setLeadStatus(basket.getStatus());
-        CLFresh.setComment(basket.getComment());
-        return CLFresh;
-    }
 
     @Override
     public String toString() {
@@ -134,14 +123,4 @@ public class ClBasket implements Comparable<ClBasket>{
                 '}';
     }
 
-    @Override
-    public int compareTo(ClBasket o) {
-        if (o.createDate.isAfter(this.createDate)){
-            return 1;
-        }else if(o.createDate.isBefore(this.createDate)){
-            return -1;
-        }else{
-            return 0;
-        }
-    }
 }

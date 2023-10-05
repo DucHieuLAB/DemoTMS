@@ -12,10 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/lead-fillter")
-public class LeadFillterController {
+public class LeadFilterController {
     private final ClBasketService clBasketService;
 
-    public LeadFillterController(ClBasketService clBasketService) {
+    public LeadFilterController(ClBasketService clBasketService) {
         this.clBasketService = clBasketService;
     }
 

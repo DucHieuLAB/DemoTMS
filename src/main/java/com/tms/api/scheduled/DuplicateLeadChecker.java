@@ -1,6 +1,5 @@
 package com.tms.api.scheduled;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import com.tms.dto.response.ClBasket;
@@ -29,5 +28,20 @@ public class DuplicateLeadChecker {
 
     public static String getRecord(String key){
         return records.get(key);
+    }
+
+    public static boolean isEmpty(){
+        return records.size() == 0 ?true:false;
+    }
+
+    public static boolean isDuplicate(String key, String value){
+        String productName = records.get(key);
+        if (productName == null){
+            return false;
+        }
+        if (productName.equals(value)){
+            return true;
+        }
+        return false;
     }
 }
