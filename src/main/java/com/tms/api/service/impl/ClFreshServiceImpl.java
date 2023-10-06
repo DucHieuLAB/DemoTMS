@@ -254,7 +254,6 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
         SoSaleOderInsert soSaleOderInsert = new SoSaleOderInsert();
         PropertyUtils.copyProperties(soSaleOderInsert, setLeadStatus.getSoSaleOderInsert());
         soSaleOderInsert.setStatus(EnumType.SaleOrder.NEW.getStatus());
-        System.out.println("ssssssssssssssssssssssssssss"+soSaleOderInsert.getStatus());
         DBResponse<String> insSo = clFreshDao.insSoSaleOder(sessionId, soSaleOderInsert);
         if (insSo.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(insSo.getErrorMsg());
