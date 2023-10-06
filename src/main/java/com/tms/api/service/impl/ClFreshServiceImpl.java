@@ -3,7 +3,6 @@ package com.tms.api.service.impl;
 
 import com.tms.api.consts.EnumType;
 import com.tms.api.consts.EnumType.DbStatusResp;
-import com.tms.api.consts.MessageConst;
 import com.tms.api.exception.ErrorMessages;
 import com.tms.api.exception.TMSDbException;
 import com.tms.api.exception.TMSEntityNotFoundException;
@@ -53,22 +52,22 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
 
     @Override
     public void insertClFresh(List<InsClFresh> clFreshes, String sessionId) throws TMSDbException {
-        StringBuilder valuesBuilder = new StringBuilder("VALUES");
-        for (InsClFresh insClFresh : clFreshes) {
-            valuesBuilder.append(insClFresh.toString());
-            //check if insClFresh is last element
-            if (insClFresh == clFreshes.get(clFreshes.size() - 1)) {
+        String values = "VALUES";
+        for (InsClFresh insClFreshs : clFreshes) {
+            values = values + insClFreshs.toString();
+            //check if insClFreshs is last element
+            if (insClFreshs == clFreshes.get(clFreshes.size() - 1)) {
                 continue;
             }
-            valuesBuilder.append(",");
+            values = values + ",";
         }
-        InsClFreshsQuery insClFreshsQuery = new InsClFreshsQuery(valuesBuilder.toString());
-        DBResponse<String> insClFreshDbResponse = clFreshDao.insClFresh(sessionId, insClFreshsQuery);
-        if (insClFreshDbResponse == null) {
-            throw new TMSDbException(MessageConst.ERROL_NULL_DB_RESPONSE);
+        InsClFreshsQuery insClFreshsQuery = new InsClFreshsQuery(values);
+        DBResponse<String> insClFreshDBResponse = clFreshDao.insClFresh(sessionId, insClFreshsQuery);
+        if (insClFreshDBResponse == null) {
+            throw new TMSDbException("Can't add new Cl Fresh");
         }
-        if (insClFreshDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
-            throw new TMSDbException(insClFreshDbResponse.getErrorMsg());
+        if (insClFreshDBResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
+            throw new TMSDbException(insClFreshDBResponse.getErrorMsg());
         }
     }
 
@@ -254,16 +253,18 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
     
         SoSaleOderInsert soSaleOderInsert = new SoSaleOderInsert();
         PropertyUtils.copyProperties(soSaleOderInsert, setLeadStatus.getSoSaleOderInsert());
-    
+        soSaleOderInsert.setStatus(EnumType.SaleOrder.NEW.getStatus());
+        System.out.println("ssssssssssssssssssssssssssss"+soSaleOderInsert.getStatus());
         DBResponse<String> insSo = clFreshDao.insSoSaleOder(sessionId, soSaleOderInsert);
         if (insSo.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(insSo.getErrorMsg());
         }
-    
+
         DBResponse<String> approve = clFreshDao.setlead(sessionId, setLeadFresh);
         if (approve.getErrorCode() != DbStatusResp.SUCCESS.getStatus() || insSo.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(approve.getErrorMsg());
         }
     }
+
 
 }
