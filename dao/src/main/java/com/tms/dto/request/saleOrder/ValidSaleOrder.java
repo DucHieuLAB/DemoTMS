@@ -16,5 +16,5 @@ public class ValidSaleOrder {
     @NotNull
     private UpdSaleOrder updSaleOrder;
     private UpdClFresh updClFresh;
-    private boolean isUpdateProduct;
+    private Boolean isUpdateProduct;
 }

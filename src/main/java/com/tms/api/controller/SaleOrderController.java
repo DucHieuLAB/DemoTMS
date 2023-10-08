@@ -29,6 +29,4 @@ public class SaleOrderController {
         boolean result = saleOrderService.updSaleOrder(updSaleOrder);
         return TMSResponse.buildResponse(result);
     }
-
-
 }

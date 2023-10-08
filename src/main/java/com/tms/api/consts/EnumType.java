@@ -3,7 +3,6 @@ package com.tms.api.consts;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Optional;
 
 public class EnumType {
 
@@ -18,7 +17,7 @@ public class EnumType {
 
     @Getter
     @AllArgsConstructor
-    public enum Filltter{
+    public enum Filltter {
         DONE_FILLTER_VALUE("1"),
         GET_LEAD_FILLTER_VALUE("0");
         private final String value;
@@ -26,7 +25,7 @@ public class EnumType {
 
     @Getter
     @AllArgsConstructor
-    public enum Campaign{
+    public enum Campaign {
         DISTRIBUTTION_RULE(82),
         CALLING_LIST(86);
         private final int type;
@@ -34,7 +33,7 @@ public class EnumType {
 
     @Getter
     @AllArgsConstructor
-    public enum LeadStatus{
+    public enum LeadStatus {
         NEW(1),
         APPROVED(2),
         REJECTED(3),
@@ -51,9 +50,10 @@ public class EnumType {
         private final int status;
 
     }
+
     @Getter
     @AllArgsConstructor
-    public enum SaleOrder{
+    public enum SaleOrder {
         NEW(41),
         CANCEL(44),
         SUCCESS(45),
@@ -64,6 +64,7 @@ public class EnumType {
         DO_CREATE_FAIL(48);
 
         private final int status;
+
         public static boolean isStatusInEnum(int status) {
             for (SaleOrder order : SaleOrder.values()) {
                 if (order.getStatus() == status) {
@@ -72,11 +73,11 @@ public class EnumType {
             }
             return false;
         }
-
     }
+
     @Getter
     @AllArgsConstructor
-    public enum DeliveryOrder{
+    public enum DeliveryOrder {
         NEW(51);
         private final int status;
     }

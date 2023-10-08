@@ -84,15 +84,32 @@ db-configs:
       q-fallback: true
     - func-name: "insert_cl_freshs_query"
       always-write-file: false
+    - func-name: "update_cl_fresh"
+      always-write-file: false
     - func-name: "update_lead_baskets"
       always-write-file: false
     # END FILTER LEAD
 
     # BEGIN UPDATE SALE ORDER
+    - func-name: "insert_od_sale_order_query"
+      always-write-file: false
     - func-name: "update_od_sale_order"
       always-write-file: false
     - func-name: "get_sale_order_validate"
       q-mode: "db"
       q-timeout: [ 5, 3 ]
       q-fallback: true
+    - func-name: "get_sale_order_by_so_id"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
+    - func-name: "get_sale_order_pending"
+      q-mode: "db"
+      q-timeout: [ 5, 3 ]
+      q-fallback: true
     # END SALE ORDER
+    #BEGEN DO
+    - func-name: "insert_od_do_new"
+      always-write-file: false
+    - func-name: "insert_od_do_new_query"
+      always-write-file: false

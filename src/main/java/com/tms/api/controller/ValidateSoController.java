@@ -9,12 +9,13 @@ import com.tms.api.exception.TMSException;
 import com.tms.api.exception.TMSInvalidInputException;
 import com.tms.api.service.ValidateSoService;
 import com.tms.dto.request.saleOrder.ValidSaleOrder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("validate_sale-orders")
+@RequestMapping("validate_sale_orders")
 public class ValidateSoController {
     private final ValidateSoService validateSoService;
 
@@ -22,66 +23,49 @@ public class ValidateSoController {
         this.validateSoService = validateSoService;
     }
 
-    @PutMapping("/")
+    @PutMapping("")
     public TMSResponse<Boolean> validateSo(@Valid @RequestBody ValidSaleOrder validSaleOrder) throws TMSException {
-
-        boolean isvalid = validate(validSaleOrder);
-        boolean result = false;
-        if (isvalid){
-             result = validateSoService.validSaleOrder(validSaleOrder);
-        }
+        validate(validSaleOrder);
+        boolean result = validateSoService.validSaleOrder(validSaleOrder);
         return TMSResponse.buildResponse(result);
     }
 
-    private boolean validate(ValidSaleOrder validSaleOrder) throws TMSException {
-        // Check valid status
-        if (!EnumType.SaleOrder.isStatusInEnum(validSaleOrder.getUpdSaleOrder().getStatus())) {
-            ApiValidatorError validatorError = ApiValidatorError.builder().field("status")
-                    .rejectValue(validSaleOrder.getUpdSaleOrder().getStatus())
-                    .message(MessageConst.SO_INVALID_STATUS)
-                    .build();
-            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
+    private void validate(ValidSaleOrder validSaleOrder) throws TMSException {
+        int status = validSaleOrder.getUpdSaleOrder().getStatus();
+        String reason = validSaleOrder.getUpdSaleOrder().getReason();
+        boolean isUpdateProduct = validSaleOrder.getIsUpdateProduct();
+
+        if (!EnumType.SaleOrder.isStatusInEnum(status)) {
+            createAndThrowException("status", status, MessageConst.SO_INVALID_STATUS);
         }
-        // SO status can be NEW
-        if (validSaleOrder.getUpdSaleOrder().getStatus() == EnumType.SaleOrder.NEW.getStatus()) {
-            ApiValidatorError validatorError = ApiValidatorError.builder().field("status")
-                    .rejectValue(validSaleOrder.getUpdSaleOrder().getStatus())
-                    .message(MessageConst.STATUS_NEW_IS_NOT_VALID)
-                    .build();
-            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
+
+        if (status == EnumType.SaleOrder.NEW.getStatus()) {
+            createAndThrowException("status", status, MessageConst.STATUS_NEW_IS_NOT_VALID);
         }
-        // SO have Cancel status need reson
-        if (validSaleOrder.getUpdSaleOrder().getStatus() == EnumType.SaleOrder.CANCEL.getStatus()) {
-            if (validSaleOrder.getUpdSaleOrder().getReason() == null || validSaleOrder.getUpdSaleOrder().getReason().equals("")) {
-                ApiValidatorError validatorError = ApiValidatorError.builder().field("reason")
-                        .rejectValue(validSaleOrder.getUpdSaleOrder().getReason())
-                        .message(MessageConst.SO_REASON_IS_INVALID)
-                        .build();
-                throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
+
+        if (status == EnumType.SaleOrder.CANCEL.getStatus() || status == EnumType.SaleOrder.PENDING.getStatus()) {
+            if (reason == null || reason.isEmpty()) {
+                createAndThrowException("reason", reason, MessageConst.SO_REASON_IS_INVALID);
             }
         }
-        // SO have Pending status need reson
-        if (validSaleOrder.getUpdSaleOrder().getStatus() == EnumType.SaleOrder.PENDING.getStatus()) {
-            if (validSaleOrder.getUpdSaleOrder().getReason() == null || validSaleOrder.getUpdSaleOrder().getReason().equals("")) {
-                ApiValidatorError validatorError = ApiValidatorError.builder().field("reason")
-                        .rejectValue(validSaleOrder.getUpdSaleOrder().getReason())
-                        .message(MessageConst.SO_REASON_IS_INVALID)
-                        .build();
-                throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
+
+        if (status == EnumType.SaleOrder.DELAY.getStatus() && validSaleOrder.getUpdSaleOrder().getCreationDate() == null) {
+            if (reason == null || reason.isEmpty()) {
+                createAndThrowException("creation date", reason, MessageConst.ERROR_MESSAGE_VALIDATED_DELAY_CREATION_DATE_REQUIRED);
             }
         }
-        // When update order UpdateClFresh can't null
-        if (validSaleOrder.isUpdateProduct()) {
-            if (validSaleOrder.getUpdClFresh() == null) {
-                ApiValidatorError validatorError = ApiValidatorError.builder().field("UpdClFresh")
-                        .rejectValue(validSaleOrder.getUpdSaleOrder().getReason())
-                        .message(MessageConst.ERROL_LEAD_UPDATE_IS_EMPTY)
-                        .build();
-                throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
-            }
+
+        if (isUpdateProduct && validSaleOrder.getUpdClFresh() == null) {
+            createAndThrowException("UpdClFresh", reason, MessageConst.ERROL_LEAD_UPDATE_IS_EMPTY);
         }
-        return true;
     }
 
+    private void createAndThrowException(String fieldName, Object rejectValue, String message) throws TMSException {
+        ApiValidatorError validatorError = ApiValidatorError.builder().field(fieldName)
+                .rejectValue(rejectValue)
+                .message(message)
+                .build();
+        throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
+    }
 
 }

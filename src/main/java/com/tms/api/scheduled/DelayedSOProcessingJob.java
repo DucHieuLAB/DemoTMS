@@ -2,6 +2,7 @@ package com.tms.api.scheduled;
 
 import com.tms.api.consts.EnumType;
 import com.tms.api.exception.TMSDbException;
+import com.tms.api.exception.TMSException;
 import com.tms.api.helper.Helper;
 import com.tms.api.helper.SaleOrderConverter;
 import com.tms.api.service.BaseService;
@@ -9,6 +10,7 @@ import com.tms.api.service.DeliveryOrderService;
 import com.tms.api.service.SaleOrderService;
 import com.tms.dto.request.odDoNew.InsDeliveryOrder;
 import com.tms.dto.request.saleOrder.GetSaleOrder;
+import com.tms.dto.request.saleOrder.GetSaleOrderPending;
 import com.tms.dto.request.saleOrder.UpdSaleOrder;
 import com.tms.dto.request.saleOrder.UpdSaleOrders;
 import com.tms.dto.response.SaleOrder;
@@ -29,16 +31,15 @@ public class DelayedSOProcessingJob extends BaseService {
         this.deliveryOrderService = deliveryOrderService;
     }
 
-    @Scheduled(fixedDelay = 5000)
-    public void processPendingSaleOrders() throws TMSDbException {
-        // Find list of Sale Orders with status "Pending"
+    @Scheduled(cron = "0 30 0 * * *", zone = "Asia/Ho_Chi_Minh")
+    public void processPendingSaleOrders() throws TMSException {
         List<SaleOrder> saleOrderDelay = findPendingSaleOrders();
 
-        if (saleOrderDelay == null || saleOrderDelay.isEmpty()) {
+        if (saleOrderDelay == null || saleOrderDelay.size() == 0) {
             return;
         }
         // Log the size of the list
-        logger.info("List SO delay Size: " + saleOrderDelay.size());
+        logger.info("LIST SO delay Size: " + saleOrderDelay.size());
 
         List<InsDeliveryOrder> insDeliveryOrders = new ArrayList<>();
 
@@ -53,26 +54,27 @@ public class DelayedSOProcessingJob extends BaseService {
             }
         }
 
-        // Log the size of the list of Delivery Orders
         logger.info("List DO Size: " + insDeliveryOrders.size());
 
-        // Create Delivery Orders
         if (!insDeliveryOrders.isEmpty()) {
+            logger.info("BEGIN insert List Delivery Orders");
             deliveryOrderService.insertDeliveryOrders(insDeliveryOrders);
+            logger.info("END insert List Delivery Orders");
         }
 
         // Update Sale Orders
         if (!saleOrderDelay.isEmpty()) {
+            logger.info("BEGIN update Sale Order");
             updateSaleOrders(saleOrderDelay);
+            logger.info("END update Sale Order");
         }
     }
 
-    private List<SaleOrder> findPendingSaleOrders() throws TMSDbException {
-        GetSaleOrder getSaleOrder = new GetSaleOrder();
-        getSaleOrder.setStatus(EnumType.SaleOrder.PENDING.getStatus());
-        getSaleOrder.setLimit(1000);
-        getSaleOrder.setOffset(0);
-        return saleOrderService.getSaleOrder(getSaleOrder);
+    private List<SaleOrder> findPendingSaleOrders() throws TMSException {
+        GetSaleOrderPending getSaleOrderPending = new GetSaleOrderPending();
+        getSaleOrderPending.setLimit(1000);
+        getSaleOrderPending.setOffset(0);
+        return saleOrderService.getSaleOrderPending(getSaleOrderPending);
     }
 
     private InsDeliveryOrder createDeliveryOrderFromSaleOrder(SaleOrder saleOrder) {

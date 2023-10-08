@@ -5,6 +5,8 @@ import com.tms.api.consts.EnumType;
 import com.tms.api.consts.MessageConst;
 import com.tms.api.exception.TMSDbException;
 import com.tms.api.helper.*;
+import com.tms.api.scheduled.data.BlackLists;
+import com.tms.api.scheduled.data.CampaignInfos;
 import com.tms.api.service.*;
 import com.tms.dto.request.clFresh.InsClFresh;
 
@@ -45,17 +47,17 @@ public class LeadFilterScheduler extends BaseService {
 
     private final String LOCAL_TIME_ZONE = "Asia/Ho_Chi_Minh";
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 100000)
     public void filterLead() throws TMSDbException {
         // Get Data To Process
         List<ClBasket> clBaskets = clBasketService.getListToProcess(sessionId);
-        if (clBaskets.size() == 0){
+        if (clBaskets.size() == 0) {
             return;
         }
         if (BlackLists.blackLists.size() == 0) {
             BlackLists.blackLists = blackListService.getBlackList();
         }
-        if (CampaignInfos.campaignInfList.size() == 0){
+        if (CampaignInfos.campaignInfList.size() == 0) {
             CampaignInfos.campaignInfList = campaignService.getCampainInfs(EnumType.Campaign.CALLING_LIST.getType());
         }
         List<CfBlackList> blackLists = BlackLists.blackLists;
@@ -64,13 +66,14 @@ public class LeadFilterScheduler extends BaseService {
         clBaskets.sort(Comparator.comparing(ClBasket::getCreateDate));
 
         filterInvalidPhonesAndBlackListAndDuplicate(clBaskets, blackLists);
-
+        logger.info("BEGIN update cl Basket");
         clBasketService.updateClBasket(clBaskets, sessionId, LOCAL_TIME_ZONE);
-
+        logger.info("End update cl Basket row = " + clBaskets.size());
         List<InsClFresh> clFreshes = ClFreshConverter.convertToInsClFreshs(clBaskets);
         updateCampaignInf(clFreshes, campaignInfs);
-        logger.info("Insert Cl Fresh");
+        logger.info("BEGIN insert Cl Fresh");
         clFreshService.insertClFresh(clFreshes, sessionId);
+        logger.info("End insert Cl Fresh row = " + clFreshes.size());
     }
 
     private void updateStatusFilter(ClBasket basket) {
@@ -95,7 +98,7 @@ public class LeadFilterScheduler extends BaseService {
     private void filterInvalidPhonesAndBlackListAndDuplicate(List<ClBasket> clBaskets, List<CfBlackList> blackLists) {
         for (ClBasket basket : clBaskets) {
             updateStatusFilter(basket);
-            if (basket.getStatus() == EnumType.LeadStatus.TRASH.getStatus()){
+            if (basket.getStatus() == EnumType.LeadStatus.TRASH.getStatus()) {
                 continue;
             }
             // Check phone num valid
@@ -104,16 +107,11 @@ public class LeadFilterScheduler extends BaseService {
                 basket.setComment(MessageConst.ERROL_INVALID_PHONE_MESSAGE);
             }
             // check in blacklist
-            if (isInBlackList(basket, blackLists) && basket.getStatus()!= EnumType.LeadStatus.TRASH.getStatus()) {
+            if (isInBlackList(basket, blackLists) && basket.getStatus() != EnumType.LeadStatus.TRASH.getStatus()) {
                 basket.setStatus(EnumType.LeadStatus.TRASH.getStatus());
                 basket.setComment(MessageConst.ERROL_IN_BLACKLIST_MESSAGE);
             }
-            // check self duplicate
-            if (checkSelfDuplicate(basket, clBaskets) && basket.getStatus()!= EnumType.LeadStatus.TRASH.getStatus()) {
-                basket.setStatus(EnumType.LeadStatus.TRASH.getStatus());
-                basket.setComment(MessageConst.ERROL_DUPLICATE_MESSAGE);
-            }
-            if (!DuplicateLeadChecker.isEmpty() && basket.getStatus()!= EnumType.LeadStatus.TRASH.getStatus()){
+            if (!DuplicateLeadChecker.isEmpty() && basket.getStatus() != EnumType.LeadStatus.TRASH.getStatus()) {
                 if (DuplicateLeadChecker.isDuplicate(basket.getPhone(), basket.getProdName())) {
                     basket.setStatus(EnumType.LeadStatus.TRASH.getStatus());
                     basket.setComment(MessageConst.ERROL_DUPLICATE_MESSAGE);
@@ -121,24 +119,6 @@ public class LeadFilterScheduler extends BaseService {
             }
             DuplicateLeadChecker.addRecord(basket);
         }
-    }
-
-    private boolean checkSelfDuplicate(ClBasket basket, List<ClBasket> result) {
-        LocalDateTime createDate1 = basket.getCreateDate();
-        LocalDateTime minTime = createDate1.minusHours(24);
-        for (ClBasket extbasket : result) {
-            if (extbasket == basket) {
-                continue;
-            }
-            if (!extbasket.getStatus().equals(EnumType.LeadStatus.TRASH.getStatus())
-                    && extbasket.getPhone().equals(basket.getPhone())
-                    && extbasket.getProdId().equals(basket.getProdId())
-                    && extbasket.getCreateDate().isAfter(minTime)
-                    && extbasket.getCreateDate().isBefore(createDate1)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private boolean isInBlackList(ClBasket basket, List<CfBlackList> blackLists) {

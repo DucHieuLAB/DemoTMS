@@ -3,6 +3,7 @@ package com.tms.api.scheduled;
 import com.tms.api.consts.EnumType;
 import com.tms.api.consts.MessageConst;
 import com.tms.api.exception.TMSDbException;
+import com.tms.api.scheduled.data.CampaignInfos;
 import com.tms.api.service.CampaignService;
 import com.tms.dto.response.CampaignInf;
 import org.springframework.scheduling.annotation.Scheduled;

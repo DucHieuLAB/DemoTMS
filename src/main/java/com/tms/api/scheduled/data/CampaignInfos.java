@@ -1,4 +1,4 @@
-package com.tms.api.scheduled;
+package com.tms.api.scheduled.data;
 
 import com.tms.dto.response.CampaignInf;
 

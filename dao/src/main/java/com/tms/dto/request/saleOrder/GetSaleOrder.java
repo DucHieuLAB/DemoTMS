@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -22,12 +23,13 @@ public class GetSaleOrder {
     private String leadPhone;
     private Double amount;
     private Integer paymentMethod;
+    @NotNull
     private Integer status;
     private Integer createby;
-    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date-between.Pattern.message}")
+    @Pattern(regexp = DaoConst.DATE_REGEX, message = "{date.Pattern.message}")
     private String createdate;
     private Integer modifyby;
-    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date-between.Pattern.message}")
+    @Pattern(regexp = DaoConst.DATE_REGEX, message = "{date.Pattern.message}")
     private String modifydate;
     private Double amountDeposit;
     private Double amountPostpaid;
@@ -50,12 +52,12 @@ public class GetSaleOrder {
     private Double discountCash4;
     private Double discountPercent4;
     private Boolean isValidated;
-    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date-between.Pattern.message}")
+    @Pattern(regexp = DaoConst.DATE_REGEX, message = "{date.Pattern.message}")
     private String creationDate;
     private Integer validateBy;
     private String reason;
     private String qaNote;
-    @Pattern(regexp = DaoConst.DATE_TIME_BETWEEN_REGEX, message = "{date-between.Pattern.message}")
+    @Pattern(regexp = DaoConst.DATE_REGEX, message = "{date.Pattern.message}")
     private String appointmentDate;
     private Integer qtyTotal;
     private Integer qtySaleable;

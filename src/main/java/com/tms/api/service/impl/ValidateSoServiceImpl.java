@@ -3,16 +3,16 @@ package com.tms.api.service.impl;
 import com.tms.api.consts.EnumType;
 import com.tms.api.consts.MessageConst;
 import com.tms.api.exception.TMSDbException;
+import com.tms.api.exception.TMSException;
 import com.tms.api.helper.SaleOrderConverter;
 import com.tms.api.service.*;
 import com.tms.dto.request.odDoNew.InsDeliveryOrder;
-import com.tms.dto.request.saleOrder.GetSaleOrder;
-import com.tms.dto.request.saleOrder.InsSaleOrder;
-import com.tms.dto.request.saleOrder.InsSaleOrderQuery;
-import com.tms.dto.request.saleOrder.ValidSaleOrder;
+import com.tms.dto.request.saleOrder.*;
 import com.tms.dto.response.SaleOrder;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,80 +28,108 @@ public class ValidateSoServiceImpl extends BaseService implements ValidateSoServ
     }
 
     @Override
-    public boolean validSaleOrder(ValidSaleOrder validSaleOrder) throws TMSDbException {
+    public boolean validSaleOrder(ValidSaleOrder validSaleOrder) throws TMSException {
         int status = validSaleOrder.getUpdSaleOrder().getStatus();
-
-        List<SaleOrder> saleOrders = getSaleOrdersById(validSaleOrder.getUpdSaleOrder().getSoId());
-        if (saleOrders.isEmpty()) {
-            throw new TMSDbException("Can't find SO with ID: " + validSaleOrder.getUpdSaleOrder().getSoId());
-        }
+        GetSaleOrderById getSaleOrderById = new GetSaleOrderById();
+        getSaleOrderById.setSoId(validSaleOrder.getUpdSaleOrder().getSoId());
+        getSaleOrderById.setLimit(1000);
+        getSaleOrderById.setOffset(0);
+        List<SaleOrder> saleOrders = saleOrderService.getSaleOrderById(getSaleOrderById);
 
         SaleOrder firstSaleOrder = saleOrders.get(0);
 
-        if(firstSaleOrder.getStatus() == EnumType.SaleOrder.CANCEL.getStatus() && status == EnumType.SaleOrder.PENDING.getStatus()){
+        if (firstSaleOrder.getStatus() == EnumType.SaleOrder.CANCEL.getStatus() && status == EnumType.SaleOrder.PENDING.getStatus()) {
             throw new TMSDbException(MessageConst.UNABLE_TO_CHANGE_STATUS_CANCEL_TO_PENDING);
         }
 
         //Những SO sau khi đã Validated chỉ có thể chuyển về trạng thái Unassigned
-        if (firstSaleOrder.getSoId() == EnumType.SaleOrder.VALIDATED.getStatus()) {
-            if (status == EnumType.SaleOrder.CANCEL.getStatus()){
+        if (firstSaleOrder.getStatus() == EnumType.SaleOrder.VALIDATED.getStatus()) {
+            if (status == EnumType.SaleOrder.CANCEL.getStatus()) {
                 throw new TMSDbException(MessageConst.UNABLE_TO_CHANGE_STATUS_VALIDATE_TO_CANCEL_PENDING);
             }
 
             if (status != EnumType.SaleOrder.UNASIGNE.getStatus()) {
                 throw new TMSDbException(MessageConst.STATUS_RESTRICTION_VALIDATE);
             }
-            //Khi SO set về trạng thái Unassigned sẽ tự động tạo ra 1 SO mới với trạng thái new
-            if (validSaleOrder.isUpdateProduct()) {
-                validSaleOrder.getUpdSaleOrder().setStatus(EnumType.SaleOrder.UNASIGNE.getStatus());
-                // Insert sale order
-                InsSaleOrder insSaleOrder = SaleOrderConverter.convertSaleOrderToInsSaleOrder(firstSaleOrder);
-                insSaleOrder.setStatus(EnumType.SaleOrder.NEW.getStatus());
-                InsSaleOrderQuery insSaleOrderQuery = new InsSaleOrderQuery();
-                insSaleOrderQuery.setQuery(insSaleOrder.toString());
-                saleOrderService.insertSaleOrders(insSaleOrderQuery);
-            }
-        }
 
-        if (firstSaleOrder.getSoId() == EnumType.SaleOrder.DELAY.getStatus()) {
+        }
+        if (firstSaleOrder.getStatus() == EnumType.SaleOrder.DELAY.getStatus()) {
             if (status != EnumType.SaleOrder.CANCEL.getStatus() && status != EnumType.SaleOrder.UNASIGNE.getStatus()) {
                 throw new TMSDbException(MessageConst.ERROR_CANNOT_CHANGE_STATUS_DELAY);
             }
         }
-
+        //Khi SO set về trạng thái Unassigned sẽ tự động tạo ra 1 SO mới với trạng thái new
+        if (status == EnumType.SaleOrder.UNASIGNE.getStatus()) {
+            logger.info("UNASIGNE case");
+            validSaleOrder.getUpdSaleOrder().setStatus(EnumType.SaleOrder.UNASIGNE.getStatus());
+            // Cập nhât các trường mới vào new SO
+            SaleOrder udpSaleOrder = SaleOrderConverter.convertToSaleOrder(validSaleOrder.getUpdSaleOrder());
+            mergeNonNullFields(firstSaleOrder, udpSaleOrder);
+            // Insert sale order
+            InsSaleOrder insSaleOrder = SaleOrderConverter.convertSaleOrderToInsSaleOrder(firstSaleOrder);
+            insSaleOrder.setStatus(EnumType.SaleOrder.NEW.getStatus());
+            InsSaleOrderQuery insSaleOrderQuery = new InsSaleOrderQuery();
+            String query = "VALUES ";
+            query = query + insSaleOrder.toString();
+            insSaleOrderQuery.setQuery(query.toString());
+            logger.info("BEGIN inser new SALE ORDER");
+            saleOrderService.insertSaleOrders(insSaleOrderQuery);
+            logger.info("End inser new SALE ORDER");
+        }
 
         // Create Delivery Order if needed
         createDeliveryOrder(validSaleOrder, status);
-
         // Update SO and ClFresh
-        updateSaleOrderAndClFresh(validSaleOrder);
+        updateSaleOrderAndClFresh(status, validSaleOrder);
+
 
         return true;
     }
 
-    private List<SaleOrder> getSaleOrdersById(int soId) throws TMSDbException {
-        GetSaleOrder getSaleOrder = new GetSaleOrder();
-        getSaleOrder.setSoId(soId);
-        getSaleOrder.setLimit(1);
-        getSaleOrder.setOffset(0);
-        return saleOrderService.getSaleOrder(getSaleOrder);
+    private void mergeNonNullFields(SaleOrder main, SaleOrder update) {
+        for (Field field : update.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                Object value = field.get(update);
+                if (value != null) {
+                    field.set(main, value);
+                }
+            } catch (IllegalAccessException e) {
+                logger.info(e.getMessage());
+            }
+        }
     }
 
-    private void createDeliveryOrder(ValidSaleOrder validSaleOrder, int status) throws TMSDbException{
+
+    private void createDeliveryOrder(ValidSaleOrder validSaleOrder, int status) throws TMSDbException {
         if (status == EnumType.SaleOrder.VALIDATED.getStatus()) {
+            logger.info("VALIDATED case");
             InsDeliveryOrder insDeliveryOrder = new InsDeliveryOrder();
             insDeliveryOrder.setSoId(validSaleOrder.getUpdSaleOrder().getSoId());
             insDeliveryOrder.setCustomerName(validSaleOrder.getUpdSaleOrder().getLeadName());
             insDeliveryOrder.setCustomerPhone(validSaleOrder.getUpdSaleOrder().getLeadPhone());
             insDeliveryOrder.setCreateby(curUserId);
-            deliveryOrderService.insertDeliveryOrder(insDeliveryOrder);
+            List<InsDeliveryOrder> insDeliveryOrderList = new ArrayList<>();
+            insDeliveryOrderList.add(insDeliveryOrder);
+            logger.info("BEGIN insert Delivery ORDER");
+            deliveryOrderService.insertDeliveryOrders(insDeliveryOrderList);
+            logger.info("END insert Delivery ORDER");
         }
     }
 
-    private void updateSaleOrderAndClFresh(ValidSaleOrder validSaleOrder) throws TMSDbException{
+    private void updateSaleOrderAndClFresh(int status, ValidSaleOrder validSaleOrder) throws TMSDbException {
+        logger.info("BEGIN update SALE ORDER");
         saleOrderService.updSaleOrder(validSaleOrder.getUpdSaleOrder());
-        if (validSaleOrder.isUpdateProduct()) {
-            clFreshService.updClFreshAfterValidSaleOrder(validSaleOrder.getUpdClFresh());
+        logger.info("END update SALE ORDER");
+        if (validSaleOrder.getIsUpdateProduct()) {
+            logger.info("BEGIN update CL_FRESH  ACCEPTD CASE: DELAY|VALIDATED|DELAY");
+            if (status == EnumType.SaleOrder.DELAY.getStatus()
+                    || status == EnumType.SaleOrder.VALIDATED.getStatus()
+                    || status == EnumType.SaleOrder.DELAY.getStatus()) {
+                clFreshService.updClFreshAfterValidSaleOrder(validSaleOrder.getUpdClFresh());
+                logger.info("END update CL_FRESH");
+            }
+
         }
     }
 }

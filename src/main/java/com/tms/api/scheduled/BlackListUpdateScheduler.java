@@ -2,6 +2,7 @@ package com.tms.api.scheduled;
 
 import com.tms.api.consts.MessageConst;
 import com.tms.api.exception.TMSDbException;
+import com.tms.api.scheduled.data.BlackLists;
 import com.tms.api.service.BlackListService;
 import com.tms.dto.response.CfBlackList;
 import org.springframework.scheduling.annotation.Scheduled;

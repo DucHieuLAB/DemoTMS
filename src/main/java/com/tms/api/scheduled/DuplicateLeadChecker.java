@@ -3,14 +3,18 @@ package com.tms.api.scheduled;
 import lombok.Getter;
 import lombok.Setter;
 import com.tms.dto.response.ClBasket;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
-import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.List;
 
 @Getter
 @Setter
 public class DuplicateLeadChecker {
-    private static HashMap<String, String> records = new HashMap();
+    private static Cache<String, String> records = CacheBuilder.newBuilder()
+            .expireAfterWrite(24, TimeUnit.HOURS)
+            .build();
 
     public static void addRecord(ClBasket data) {
         records.put(data.getPhone(), data.getProdName());
@@ -22,26 +26,12 @@ public class DuplicateLeadChecker {
         }
     }
 
-    public static void clearRecords() {
-        records.clear();
+    public static boolean isEmpty() {
+        return records.size() == 0 ? true : false;
     }
 
-    public static String getRecord(String key){
-        return records.get(key);
-    }
-
-    public static boolean isEmpty(){
-        return records.size() == 0 ?true:false;
-    }
-
-    public static boolean isDuplicate(String key, String value){
-        String productName = records.get(key);
-        if (productName == null){
-            return false;
-        }
-        if (productName.equals(value)){
-            return true;
-        }
-        return false;
+    public static boolean isDuplicate(String key, String value) {
+        String storedValue = records.getIfPresent(key);
+        return storedValue != null && storedValue.equals(value);
     }
 }

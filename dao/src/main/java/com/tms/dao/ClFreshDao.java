@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class ClFreshDao extends BaseDao {
 
     private static final String INS_CL_FRESHS_QUERY = "insert_cl_freshs_query";
-    private static final String UPD_CL_FRESHS ="insert_cl_freshs_query";
+    private static final String UPD_CL_FRESHS ="update_cl_fresh";
     private static final String GET_LEAD_FOR_AGENT_URGENT = "get_lead_for_agent_urgent";
     private static final String GET_LEAD_FOR_AGENT_CALLBACK = "get_lead_for_agent_callback";
     private static final String GET_LEAD_FOR_AGENT_NEW = "get_lead_for_agent_new";
