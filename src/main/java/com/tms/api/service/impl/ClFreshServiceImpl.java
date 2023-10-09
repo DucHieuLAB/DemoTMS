@@ -42,7 +42,7 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
     private final ClFreshDao clFreshDao;
 
     private final ClCallbackDao clCallbackDao;
-    
+
     public ClFreshServiceImpl(ClFreshDao clFreshDao, ClCallbackDao clCallbackDao) {
         this.clFreshDao = clFreshDao;
         this.clCallbackDao = clCallbackDao;
@@ -120,6 +120,9 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
     }
 
     private List<GetLeadForAgentDto> handleLead(DBResponse<List<GetLeadForAgentDto>> result, GetLeadfor getLeadfor) throws TMSException {
+        if (result.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
+            throw new TMSDbException(result.getErrorMsg());
+        }
         SetLeadFresh setLeadFresh = new SetLeadFresh();
         setLeadFresh.setAssigned(getLeadfor.getAgentId());
         setLeadFresh.setAgentHold(getLeadfor.getAgentId());
