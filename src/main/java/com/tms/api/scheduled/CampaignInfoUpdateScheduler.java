@@ -3,6 +3,7 @@ package com.tms.api.scheduled;
 import com.tms.api.consts.EnumType;
 import com.tms.api.consts.MessageConst;
 import com.tms.api.exception.TMSDbException;
+import com.tms.api.exception.TMSException;
 import com.tms.api.scheduled.data.CampaignInfos;
 import com.tms.api.service.CampaignService;
 import com.tms.dto.response.CampaignInf;
@@ -20,7 +21,7 @@ public class CampaignInfoUpdateScheduler {
     }
 
     @Scheduled(cron = "0 30 0 * * *", zone = "Asia/Ho_Chi_Minh")
-    public void updateCampaignInfoList() throws TMSDbException {
+    public void updateCampaignInfoList() throws TMSException {
         List<CampaignInf> campaignInfs = campaignService.getCampainInfs(EnumType.Campaign.CALLING_LIST.getType());
         if (campaignInfs == null) {
             throw new TMSDbException(MessageConst.ERROL_NULL_DB_RESPONSE);
