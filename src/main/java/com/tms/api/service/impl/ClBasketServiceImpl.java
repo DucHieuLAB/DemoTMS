@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -72,8 +73,7 @@ public class ClBasketServiceImpl extends BaseService implements ClBasketService 
             throw new TMSDbException(leadBaskets.getErrorMsg());
         }
         if (CollectionUtils.isEmpty(leadBaskets.getResult())) {
-            String errorMessage = MessageConst.NOT_FOUND_WITH_OBJECT_PARAMS + Helper.toJson(getLeadToFillter);
-            throw new TMSEntityNotFoundException(ErrorMessages.NOT_FOUND, new ApiMessageError(errorMessage));
+            return new ArrayList<>();
         }
         return leadBaskets.getResult();
     }
