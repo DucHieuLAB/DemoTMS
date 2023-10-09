@@ -46,9 +46,6 @@ public class SaleOrderServiceImpl extends BaseService implements SaleOrderServic
     @Override
     public List<SaleOrder> getSaleOrder(GetSaleOrder getSaleOrder) throws TMSException {
         DBResponse<List<SaleOrder>> listDbResponse = odSaleOrderDao.getSaleOrder(sessionId, getSaleOrder);
-        if (isResponseNullOrResultNull(listDbResponse)) {
-            throw new TMSDbException(MessageConst.ERROL_NULL_DB_RESPONSE);
-        }
         if (listDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(listDbResponse.getErrorMsg());
         }
@@ -62,9 +59,6 @@ public class SaleOrderServiceImpl extends BaseService implements SaleOrderServic
     @Override
     public List<SaleOrder> getSaleOrderById(GetSaleOrderById getSaleOrderById) throws TMSException {
         DBResponse<List<SaleOrder>> listDbResponse = odSaleOrderDao.getSaleOrderById(sessionId, getSaleOrderById);
-        if (isResponseNullOrResultNull(listDbResponse)) {
-            throw new TMSDbException(MessageConst.ERROL_NULL_DB_RESPONSE);
-        }
         if (listDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(listDbResponse.getErrorMsg());
         }
@@ -78,9 +72,6 @@ public class SaleOrderServiceImpl extends BaseService implements SaleOrderServic
     @Override
     public List<SaleOrder> getSaleOrderPending(GetSaleOrderPending getSaleOrderPending) throws TMSException {
         DBResponse<List<SaleOrder>> listDbResponse = odSaleOrderDao.getSaleOrderPending(sessionId, getSaleOrderPending);
-        if (listDbResponse == null) {
-            throw new TMSDbException(MessageConst.ERROL_NULL_DB_RESPONSE);
-        }
         if (listDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(listDbResponse.getErrorMsg());
         }
@@ -109,7 +100,4 @@ public class SaleOrderServiceImpl extends BaseService implements SaleOrderServic
         return true;
     }
 
-    public boolean isResponseNullOrResultNull(DBResponse<List<SaleOrder>> dbResponse) {
-        return dbResponse == null || dbResponse.getResult() == null;
-    }
 }

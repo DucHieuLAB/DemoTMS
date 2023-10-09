@@ -42,8 +42,7 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
     private final ClFreshDao clFreshDao;
 
     private final ClCallbackDao clCallbackDao;
-
-
+    
     public ClFreshServiceImpl(ClFreshDao clFreshDao, ClCallbackDao clCallbackDao) {
         this.clFreshDao = clFreshDao;
         this.clCallbackDao = clCallbackDao;

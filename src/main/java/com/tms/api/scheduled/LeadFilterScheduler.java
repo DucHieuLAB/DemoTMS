@@ -3,7 +3,7 @@ package com.tms.api.scheduled;
 
 import com.tms.api.consts.EnumType;
 import com.tms.api.consts.MessageConst;
-import com.tms.api.exception.TMSDbException;
+import com.tms.api.exception.TMSException;
 import com.tms.api.helper.*;
 import com.tms.api.scheduled.data.BlackLists;
 import com.tms.api.scheduled.data.CampaignInfos;
@@ -48,10 +48,10 @@ public class LeadFilterScheduler extends BaseService {
     private final String LOCAL_TIME_ZONE = "Asia/Ho_Chi_Minh";
 
     @Scheduled(fixedDelay = 10000)
-    public void filterLead() throws TMSDbException {
+    public void filterLead() throws TMSException {
         logger.info("filter lead");
         // Get Data To Process
-        List<ClBasket> clBaskets = clBasketService.getListToProcess(sessionId);
+        List<ClBasket> clBaskets = clBasketService.getListToFilterProcess(sessionId);
         if (clBaskets.size() == 0) {
             return;
         }
