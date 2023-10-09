@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CfBlackListDao extends BaseDao{
-
+public class CfBlackListDao extends BaseDao {
     private static final String GET_BLACKLIST = "get_blacklist";
 
     /* BEGIN GET */

@@ -6,5 +6,7 @@ import com.tms.dto.response.CampaignInf;
 import java.util.List;
 
 public interface CampaignService {
+
     List<CampaignInf> getCampainInfs(Integer campaignStatus) throws TMSDbException;
+
 }

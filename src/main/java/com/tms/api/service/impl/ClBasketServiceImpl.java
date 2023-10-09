@@ -31,25 +31,25 @@ public class ClBasketServiceImpl extends BaseService implements ClBasketService 
     }
 
     @Override
-    public List<ClBasket> getListToFillter(GetLeadToFillter getLeadToFillter) throws TMSException{
-        DBResponse<List<ClBasket>> listDbResponse = clBasketDao.getLeadUpdate(sessionId,getLeadToFillter);
-        if(listDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
+    public List<ClBasket> getListToFillter(GetLeadToFillter getLeadToFillter) throws TMSException {
+        DBResponse<List<ClBasket>> listDbResponse = clBasketDao.getLeadUpdate(sessionId, getLeadToFillter);
+        if (listDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(listDbResponse.getErrorMsg());
         }
         return listDbResponse.getResult();
     }
 
     @Override
-    public List<ClBasket> getLeadInTimeRange(LocalDateTime startTime,LocalDateTime endTime) throws TMSDbException {
+    public List<ClBasket> getLeadInTimeRange(LocalDateTime startTime, LocalDateTime endTime) throws TMSDbException {
         GetLeadBasketsInTimeRange getLeadBasketsInTimeRange = new GetLeadBasketsInTimeRange();
         getLeadBasketsInTimeRange.setEndTime(DateHelper.toDateTime(endTime));
         getLeadBasketsInTimeRange.setStartTime(DateHelper.toDateTime(startTime));
-        DBResponse<List<ClBasket>>  leadsInRange = clBasketDao.getLeadBasketsInTimeRange(sessionId,getLeadBasketsInTimeRange);
+        DBResponse<List<ClBasket>> leadsInRange = clBasketDao.getLeadBasketsInTimeRange(sessionId, getLeadBasketsInTimeRange);
         // Check Exception
-        if (leadsInRange == null || leadsInRange.getResult().size() == 0){
+        if (isResponseNullOrResultNull(leadsInRange)) {
             return new ArrayList<>();
         }
-        if(leadsInRange.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
+        if (leadsInRange.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(leadsInRange.getErrorMsg());
         }
         return leadsInRange.getResult();
@@ -59,11 +59,11 @@ public class ClBasketServiceImpl extends BaseService implements ClBasketService 
     public List<ClBasket> getListToProcess(String sessionId) throws TMSDbException {
         GetLeadToFillter getLeadToFillter = new GetLeadToFillter();
         getLeadToFillter.setInAttribute3(EnumType.Filltter.GET_LEAD_FILLTER_VALUE.getValue());
-        DBResponse<List<ClBasket>> leadBaskets  = clBasketDao.getLeadUpdate(sessionId, getLeadToFillter);
-        if (leadBaskets ==null || leadBaskets.getResult().size() == 0){
+        DBResponse<List<ClBasket>> leadBaskets = clBasketDao.getLeadUpdate(sessionId, getLeadToFillter);
+        if (isResponseNullOrResultNull(leadBaskets)) {
             return new ArrayList<>();
         }
-        if(leadBaskets.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
+        if (leadBaskets.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(leadBaskets.getErrorMsg());
         }
         return leadBaskets.getResult();
@@ -82,6 +82,10 @@ public class ClBasketServiceImpl extends BaseService implements ClBasketService 
         if (resultUpdate.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(resultUpdate.getErrorMsg());
         }
+    }
+
+    public boolean isResponseNullOrResultNull(DBResponse<List<ClBasket>> dbResponse) {
+        return dbResponse == null || dbResponse.getResult() == null;
     }
 }
 

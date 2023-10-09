@@ -10,6 +10,7 @@ import com.tms.dto.response.ScheduleUpdate;
 import java.util.List;
 
 public interface ScheduleUpdateService {
+
     ScheduleUpdate getScheduleUpdateById(int id);
 
     List<ScheduleUpdate> getScheduleUpdate(GetScheduleUpdate getScheduleUpdate) throws TMSException;

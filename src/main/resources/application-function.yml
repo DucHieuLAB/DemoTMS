@@ -2,7 +2,6 @@ db-configs:
   file-path: data/bak
   configs:
     # BEGIN SCHEDULE UPDATE
-    # BEGIN SCHEDULE UPDATE
     - func-name: "get_schedule_update"
       q-mode: "db"
       q-timeout: [5, 3]
@@ -54,7 +53,6 @@ db-configs:
     - func-name: "get_lead_by_id"
       q-mode: "db"
       q-timeout: [5, 3]
-
     # END SCHEDULE UPDATE
 
     # BEGIN FILTER LEAD
@@ -108,8 +106,9 @@ db-configs:
       q-timeout: [ 5, 3 ]
       q-fallback: true
     # END SALE ORDER
-    #BEGEN DO
+    #BEGIN DELIVERY ORDER
     - func-name: "insert_od_do_new"
       always-write-file: false
     - func-name: "insert_od_do_new_query"
       always-write-file: false
+    #END DELIVERY ORDER

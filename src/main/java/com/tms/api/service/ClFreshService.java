@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public interface ClFreshService {
+
     void insertClFresh(List<InsClFresh> clFreshes, String sessionId) throws TMSDbException;
 
     boolean updClFreshAfterValidSaleOrder(UpdClFresh updClFresh) throws TMSDbException;

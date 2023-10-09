@@ -51,8 +51,3 @@ public class SoSaleOderInsert {
     private Integer qtySaleable;
     private String deliveryPackageCode;
 }
-    // private Integer orgId;
-    // private Integer leadId;
-    // private String leadName;
-    // private String leadPhone;
-    // private Integer paymentMethod;

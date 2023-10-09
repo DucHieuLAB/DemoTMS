@@ -47,8 +47,9 @@ public class LeadFilterScheduler extends BaseService {
 
     private final String LOCAL_TIME_ZONE = "Asia/Ho_Chi_Minh";
 
-    @Scheduled(fixedDelay = 100000)
+    @Scheduled(fixedDelay = 10000)
     public void filterLead() throws TMSDbException {
+        logger.info("filter lead");
         // Get Data To Process
         List<ClBasket> clBaskets = clBasketService.getListToProcess(sessionId);
         if (clBaskets.size() == 0) {

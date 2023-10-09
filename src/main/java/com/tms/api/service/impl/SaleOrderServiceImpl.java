@@ -45,11 +45,11 @@ public class SaleOrderServiceImpl extends BaseService implements SaleOrderServic
 
     @Override
     public List<SaleOrder> getSaleOrder(GetSaleOrder getSaleOrder) throws TMSException {
-        DBResponse<List<SaleOrder>> listDbResponse = odSaleOrderDao.getSaleOrder(sessionId,getSaleOrder);
-        if (listDbResponse == null){
+        DBResponse<List<SaleOrder>> listDbResponse = odSaleOrderDao.getSaleOrder(sessionId, getSaleOrder);
+        if (isResponseNullOrResultNull(listDbResponse)) {
             throw new TMSDbException(MessageConst.ERROL_NULL_DB_RESPONSE);
         }
-        if (listDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
+        if (listDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(listDbResponse.getErrorMsg());
         }
         if (CollectionUtils.isEmpty(listDbResponse.getResult())) {
@@ -61,11 +61,11 @@ public class SaleOrderServiceImpl extends BaseService implements SaleOrderServic
 
     @Override
     public List<SaleOrder> getSaleOrderById(GetSaleOrderById getSaleOrderById) throws TMSException {
-        DBResponse<List<SaleOrder>> listDbResponse = odSaleOrderDao.getSaleOrderById(sessionId,getSaleOrderById);
-        if (listDbResponse == null){
+        DBResponse<List<SaleOrder>> listDbResponse = odSaleOrderDao.getSaleOrderById(sessionId, getSaleOrderById);
+        if (isResponseNullOrResultNull(listDbResponse)) {
             throw new TMSDbException(MessageConst.ERROL_NULL_DB_RESPONSE);
         }
-        if (listDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
+        if (listDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(listDbResponse.getErrorMsg());
         }
         if (CollectionUtils.isEmpty(listDbResponse.getResult())) {
@@ -77,11 +77,11 @@ public class SaleOrderServiceImpl extends BaseService implements SaleOrderServic
 
     @Override
     public List<SaleOrder> getSaleOrderPending(GetSaleOrderPending getSaleOrderPending) throws TMSException {
-        DBResponse<List<SaleOrder>> listDbResponse = odSaleOrderDao.getSaleOrderPending(sessionId,getSaleOrderPending);
-        if (listDbResponse == null){
+        DBResponse<List<SaleOrder>> listDbResponse = odSaleOrderDao.getSaleOrderPending(sessionId, getSaleOrderPending);
+        if (listDbResponse == null) {
             throw new TMSDbException(MessageConst.ERROL_NULL_DB_RESPONSE);
         }
-        if (listDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
+        if (listDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(listDbResponse.getErrorMsg());
         }
         if (CollectionUtils.isEmpty(listDbResponse.getResult())) {
@@ -102,11 +102,14 @@ public class SaleOrderServiceImpl extends BaseService implements SaleOrderServic
 
     @Override
     public boolean insertSaleOrders(InsSaleOrderQuery insSaleOrderQuery) throws TMSDbException {
-        DBResponse<String> insertSaleOrders = odSaleOrderDao.insSaleOrders(sessionId,insSaleOrderQuery);
-        if (insertSaleOrders.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()){
+        DBResponse<String> insertSaleOrders = odSaleOrderDao.insSaleOrders(sessionId, insSaleOrderQuery);
+        if (insertSaleOrders.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(insertSaleOrders.getErrorMsg());
         }
         return true;
     }
 
+    public boolean isResponseNullOrResultNull(DBResponse<List<SaleOrder>> dbResponse) {
+        return dbResponse == null || dbResponse.getResult() == null;
+    }
 }

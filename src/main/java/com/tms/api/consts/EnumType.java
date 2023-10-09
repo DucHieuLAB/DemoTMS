@@ -18,8 +18,8 @@ public class EnumType {
     @Getter
     @AllArgsConstructor
     public enum Filltter {
-        DONE_FILLTER_VALUE("1"),
-        GET_LEAD_FILLTER_VALUE("0");
+        DONE_FILLTER_VALUE("0"),
+        GET_LEAD_FILLTER_VALUE("1");
         private final String value;
     }
 

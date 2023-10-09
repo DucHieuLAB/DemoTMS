@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 public class CampaignInfoUpdateScheduler {
-    private CampaignService campaignService;
+    private final CampaignService campaignService;
 
     public CampaignInfoUpdateScheduler(CampaignService campaignService) {
         this.campaignService = campaignService;
@@ -22,7 +22,7 @@ public class CampaignInfoUpdateScheduler {
     @Scheduled(cron = "0 30 0 * * *", zone = "Asia/Ho_Chi_Minh")
     public void updateCampaignInfoList() throws TMSDbException {
         List<CampaignInf> campaignInfs = campaignService.getCampainInfs(EnumType.Campaign.CALLING_LIST.getType());
-        if (campaignService == null) {
+        if (campaignInfs == null) {
             throw new TMSDbException(MessageConst.ERROL_NULL_DB_RESPONSE);
         }
         CampaignInfos.campaignInfList = campaignInfs;

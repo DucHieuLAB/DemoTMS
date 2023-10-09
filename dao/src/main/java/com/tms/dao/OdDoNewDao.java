@@ -6,7 +6,7 @@ import com.tms.dto.request.odDoNew.InsDeliveryOrderQuery;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OdDoNewDao extends BaseDao{
+public class OdDoNewDao extends BaseDao {
 
     private static final String INSERT_OD_DO_NEW = "insert_od_do_new";
     private static final String INSERT_OD_DO_NEW_QUERY = "insert_od_do_new_query";
@@ -15,7 +15,7 @@ public class OdDoNewDao extends BaseDao{
         return this.dbInsOrUpd(sessionId, INSERT_OD_DO_NEW, params);
     }
 
-    public DBResponse<String> insDeliveryOrders(String sessionId, InsDeliveryOrderQuery params){
+    public DBResponse<String> insDeliveryOrders(String sessionId, InsDeliveryOrderQuery params) {
         return this.dbInsOrUpd(sessionId, INSERT_OD_DO_NEW_QUERY, params);
     }
 }

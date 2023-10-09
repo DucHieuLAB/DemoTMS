@@ -12,16 +12,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ClBasketDao extends BaseDao{
+public class ClBasketDao extends BaseDao {
     private static final String GET_NULL_ATTRIBUTE3 = "get_null_attribute3_rows";
+
     private static final String UPDATE_Cl_BASKET = "update_lead_baskets";
+
     private static final String GET_LEAD_BASKETS_IN_TIMERANGE = "get_lead_basket_in_timerange";
 
-    public DBResponse<List<ClBasket>> getLeadUpdate(String sessionId , GetLeadToFillter params) {
+    public DBResponse<List<ClBasket>> getLeadUpdate(String sessionId, GetLeadToFillter params) {
         return this.dbGet(sessionId, GET_NULL_ATTRIBUTE3, params, ClBasket.class);
     }
 
-    public DBResponse<List<ClBasket>> getLeadBasketsInTimeRange(String sessionId , GetLeadBasketsInTimeRange params) {
+    public DBResponse<List<ClBasket>> getLeadBasketsInTimeRange(String sessionId, GetLeadBasketsInTimeRange params) {
         return this.dbGet(sessionId, GET_LEAD_BASKETS_IN_TIMERANGE, params, ClBasket.class);
     }
 

@@ -9,7 +9,6 @@ import com.tms.api.exception.TMSException;
 import com.tms.api.exception.TMSInvalidInputException;
 import com.tms.api.service.ValidateSoService;
 import com.tms.dto.request.saleOrder.ValidSaleOrder;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

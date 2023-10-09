@@ -51,32 +51,31 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
 
     @Override
     public void insertClFresh(List<InsClFresh> clFreshes, String sessionId) throws TMSDbException {
-        String values = "VALUES";
+        StringBuilder values = new StringBuilder();
+        values.append(" VALUES ");
         for (InsClFresh insClFreshs : clFreshes) {
-            values = values + insClFreshs.toString();
+            values.append(insClFreshs.toString());
             //check if insClFreshs is last element
             if (insClFreshs == clFreshes.get(clFreshes.size() - 1)) {
                 continue;
             }
-            values = values + ",";
+            values.append(",");
         }
-        InsClFreshsQuery insClFreshsQuery = new InsClFreshsQuery(values);
-        DBResponse<String> insClFreshDBResponse = clFreshDao.insClFresh(sessionId, insClFreshsQuery);
-        if (insClFreshDBResponse == null) {
-            throw new TMSDbException("Can't add new Cl Fresh");
-        }
-        if (insClFreshDBResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
-            throw new TMSDbException(insClFreshDBResponse.getErrorMsg());
+        logger.info(values.toString());
+        InsClFreshsQuery insClFreshsQuery = new InsClFreshsQuery(values.toString());
+        DBResponse<String> insClFreshDbResponse = clFreshDao.insClFresh(sessionId, insClFreshsQuery);
+        if (insClFreshDbResponse.getErrorCode() != EnumType.DbStatusResp.SUCCESS.getStatus()) {
+            throw new TMSDbException(insClFreshDbResponse.getErrorMsg());
         }
     }
 
     @Override
     public boolean updClFreshAfterValidSaleOrder(UpdClFresh updClFresh) throws TMSDbException {
         updClFresh.setModifyBy(curUserId);
-        return updClFresh(sessionId, updClFresh);
+        return updClFresh(updClFresh);
     }
 
-    public boolean updClFresh(String sessionId, UpdClFresh updClFresh) throws TMSDbException {
+    public boolean updClFresh(UpdClFresh updClFresh) throws TMSDbException {
         List<UpdClFresh> clFreshes = new ArrayList<>();
         clFreshes.add(updClFresh);
         String json = Helper.convertListToJson(clFreshes);
@@ -91,7 +90,7 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
 
     @Override
     public List<GetLeadForAgentDto> getLeadForAgent(GetLeadfor getLeadfor) throws TMSException {
-        DBResponse<List<GetLeadForAgentDto>> result = null;
+        DBResponse<List<GetLeadForAgentDto>> result;
 
         result = clFreshDao.getLeadForHold(sessionId, getLeadfor);
         if (!CollectionUtils.isEmpty(result.getResult())) {
@@ -226,7 +225,7 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
         if (delcalback.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(delcalback.getErrorMsg());
         }
-        DBResponse<String> setcalback = clCallbackDao.InsClCallback(sessionId, insClCallback);
+        DBResponse<String> setcalback = clCallbackDao.insClCallback(sessionId, insClCallback);
 
         if (setcalback.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(setcalback.getErrorMsg());

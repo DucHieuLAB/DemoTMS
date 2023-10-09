@@ -18,7 +18,9 @@ import java.util.List;
 @Service
 public class ValidateSoServiceImpl extends BaseService implements ValidateSoService {
     private final SaleOrderService saleOrderService;
+
     private final ClFreshService clFreshService;
+
     private final DeliveryOrderService deliveryOrderService;
 
     public ValidateSoServiceImpl(SaleOrderService saleOrderService, ClFreshService clFreshService, DeliveryOrderService deliveryOrderService) {
@@ -71,7 +73,7 @@ public class ValidateSoServiceImpl extends BaseService implements ValidateSoServ
             InsSaleOrderQuery insSaleOrderQuery = new InsSaleOrderQuery();
             String query = "VALUES ";
             query = query + insSaleOrder.toString();
-            insSaleOrderQuery.setQuery(query.toString());
+            insSaleOrderQuery.setQuery(query);
             logger.info("BEGIN inser new SALE ORDER");
             saleOrderService.insertSaleOrders(insSaleOrderQuery);
             logger.info("End inser new SALE ORDER");
@@ -81,7 +83,6 @@ public class ValidateSoServiceImpl extends BaseService implements ValidateSoServ
         createDeliveryOrder(validSaleOrder, status);
         // Update SO and ClFresh
         updateSaleOrderAndClFresh(status, validSaleOrder);
-
 
         return true;
     }
@@ -99,7 +100,6 @@ public class ValidateSoServiceImpl extends BaseService implements ValidateSoServ
             }
         }
     }
-
 
     private void createDeliveryOrder(ValidSaleOrder validSaleOrder, int status) throws TMSDbException {
         if (status == EnumType.SaleOrder.VALIDATED.getStatus()) {
@@ -124,8 +124,7 @@ public class ValidateSoServiceImpl extends BaseService implements ValidateSoServ
         if (validSaleOrder.getIsUpdateProduct()) {
             logger.info("BEGIN update CL_FRESH  ACCEPTD CASE: DELAY|VALIDATED|DELAY");
             if (status == EnumType.SaleOrder.DELAY.getStatus()
-                    || status == EnumType.SaleOrder.VALIDATED.getStatus()
-                    || status == EnumType.SaleOrder.DELAY.getStatus()) {
+                    || status == EnumType.SaleOrder.VALIDATED.getStatus()) {
                 clFreshService.updClFreshAfterValidSaleOrder(validSaleOrder.getUpdClFresh());
                 logger.info("END update CL_FRESH");
             }
