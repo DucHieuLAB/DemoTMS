@@ -166,7 +166,6 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
         return true;
     }
 
-<<<<<<< HEAD
     @Override
     public boolean updDayCallAfter24Hour() throws TMSException {
         DBResponse<String> dbResponse  = clFreshDao.updClFreshDayCallAfter24Hour(sessionId,new UpdDayCallAfter24Hour());
@@ -177,9 +176,6 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
     }
 
     private void validateStatus(SetLeadStatus setLeadStatus) throws TMSInvalidInputException {
-=======
-    private void validateStatus(SetLeadStatus setLeadStatus) throws TMSException {
->>>>>>> L3/TruongNV
         int[] validStatuses = {EnumType.LeadStatus.TRASH.getStatus(),
                 EnumType.LeadStatus.REJECTED.getStatus(),
                 EnumType.LeadStatus.BUSY.getStatus(),
@@ -190,8 +186,8 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
                 EnumType.LeadStatus.CALLBACKPOTENTIAL.getStatus(),
                 EnumType.LeadStatus.APPROVED.getStatus()};
         if (Arrays.stream(validStatuses).noneMatch(status -> status == setLeadStatus.getSetLeadFresh().getLeadStatus())) {
-            String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION + Helper.toJson("status :"+setLeadStatus.getSetLeadFresh().getLeadStatus());
-            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
+            String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION + Helper.toJson("status :" + setLeadStatus.getSetLeadFresh().getLeadStatus());
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, new ApiMessageError(errorMessage));
         }
     }
 
@@ -199,17 +195,13 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
         SetLeadFresh setLeadFresh = new SetLeadFresh();
         PropertyUtils.copyProperties(setLeadFresh, setLeadStatus.getSetLeadFresh());
 
-<<<<<<< HEAD
         if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty() || setLeadStatus.getSetLeadFresh().getFcrReason() ==null ) {
-=======
-        if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty() || setLeadStatus.getSetLeadFresh().getFcrReason() == null) {
->>>>>>> L3/TruongNV
             String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" Reason:"+setLeadStatus.getSetLeadFresh().getFcrReason());
             throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
-
+    
         DBResponse<String> setLead = clFreshDao.setlead(sessionId, setLeadFresh);
-
+    
         if (setLead.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(setLead.getErrorMsg());
         }
@@ -218,11 +210,8 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
     private void handleBusyNoAnswerUnreachable(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         SetLeadFresh setLeadFresh = new SetLeadFresh();
         PropertyUtils.copyProperties(setLeadFresh, setLeadStatus.getSetLeadFresh());
-        setLeadFresh.setDayCall(setLeadStatus.getSetLeadFresh().getDayCall()+1);
-        setLeadFresh.setTotalCall(setLeadStatus.getSetLeadFresh().getTotalCall()+1);
-
         DBResponse<String> setLead = clFreshDao.setlead(sessionId, setLeadFresh);
-
+    
         if (setLead.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(setLead.getErrorMsg());
         }
@@ -231,29 +220,31 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
     private void handleCallBack(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         SetLeadFresh setLeadFresh = new SetLeadFresh();
         PropertyUtils.copyProperties(setLeadFresh, setLeadStatus.getSetLeadFresh());
-        if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty() || setLeadStatus.getSetLeadFresh().getFcrReason() == null) {
+        if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty()) {
              String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" Reason:"+setLeadStatus.getSetLeadFresh().getFcrReason());
             throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
 
-        if (setLeadStatus.getInsClCallback().getRequestTime().isEmpty() || setLeadStatus.getInsClCallback().getRequestTime() == null) {
+        if (setLeadStatus.getInsClCallback().getRequestTime().isEmpty()) {
              String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" RequestTime:"+setLeadStatus.getInsClCallback().getRequestTime());
             throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
+    
         InsClCallback insClCallback = new InsClCallback();
         PropertyUtils.copyProperties(insClCallback, setLeadStatus.getInsClCallback());
         DelClCallback delClCallback = new DelClCallback(setLeadStatus.getInsClCallback().getLeadId());
-
+    
         DBResponse<String> setLead = clFreshDao.setlead(sessionId, setLeadFresh);
         if (setLead.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(setLead.getErrorMsg());
         }
+    
         DBResponse<String> delcalback = clCallbackDao.delClCallback(sessionId, delClCallback);
         if (delcalback.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(delcalback.getErrorMsg());
         }
+    
         DBResponse<String> setcalback = clCallbackDao.insClCallback(sessionId, insClCallback);
-
         if (setcalback.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(setcalback.getErrorMsg());
         }
@@ -261,40 +252,40 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
 
     private void handleApproved(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         if (setLeadStatus.getSetLeadFresh().getAddress().isEmpty() || setLeadStatus.getSetLeadFresh().getAddress() == null) {
-           String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" address:"+setLeadStatus.getSetLeadFresh().getAddress());
-            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
+            String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" address:" + setLeadStatus.getSetLeadFresh().getAddress());
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, new ApiMessageError(errorMessage));
         }
-
+    
         if (setLeadStatus.getSoSaleOderInsert().getLeadPhone().isEmpty() || setLeadStatus.getSoSaleOderInsert().getLeadPhone() == null) {
-             String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" Phone:"+setLeadStatus.getSoSaleOderInsert().getLeadPhone());
-            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
+            String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" Phone:" + setLeadStatus.getSoSaleOderInsert().getLeadPhone());
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, new ApiMessageError(errorMessage));
         }
-
+    
         if (setLeadStatus.getSetLeadFresh().getProdId() == null) {
-             String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" ProdID:"+setLeadStatus.getSetLeadFresh().getProdId() );
-            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
+            String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" ProdID:" + setLeadStatus.getSetLeadFresh().getProdId());
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, new ApiMessageError(errorMessage));
         }
+    
         if (setLeadStatus.getSoSaleOderInsert().getPaymentMethod() == null) {
-            String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" PaymentMethod:"+setLeadStatus.getSoSaleOderInsert().getPaymentMethod());
-            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
+            String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" PaymentMethod:" + setLeadStatus.getSoSaleOderInsert().getPaymentMethod());
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, new ApiMessageError(errorMessage));
         }
-
+    
         SetLeadFresh setLeadFresh = new SetLeadFresh();
         PropertyUtils.copyProperties(setLeadFresh, setLeadStatus.getSetLeadFresh());
-
+    
         SoSaleOderInsert soSaleOderInsert = new SoSaleOderInsert();
         PropertyUtils.copyProperties(soSaleOderInsert, setLeadStatus.getSoSaleOderInsert());
         soSaleOderInsert.setStatus(EnumType.SaleOrder.NEW.getStatus());
+    
         DBResponse<String> insSo = clFreshDao.insSoSaleOder(sessionId, soSaleOderInsert);
         if (insSo.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(insSo.getErrorMsg());
         }
-
+    
         DBResponse<String> approve = clFreshDao.setlead(sessionId, setLeadFresh);
         if (approve.getErrorCode() != DbStatusResp.SUCCESS.getStatus() || insSo.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
             throw new TMSDbException(approve.getErrorMsg());
         }
     }
-
-
 }
