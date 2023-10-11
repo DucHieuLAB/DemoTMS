@@ -174,15 +174,6 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
         return true;
     }
 
-    @Override
-    public boolean updDayCallAfter24Hour() throws TMSException {
-        DBResponse<String> dbResponse  = clFreshDao.updClFreshDayCallAfter24Hour(sessionId,new UpdDayCallAfter24Hour());
-        if (dbResponse.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
-            throw new TMSDbException(dbResponse.getErrorMsg());
-        }
-        return true;
-    }
-
     private void validateStatus(SetLeadStatus setLeadStatus) throws TMSInvalidInputException {
         int[] validStatuses = {EnumType.LeadStatus.TRASH.getStatus(),
                 EnumType.LeadStatus.REJECTED.getStatus(),
