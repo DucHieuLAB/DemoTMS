@@ -49,7 +49,6 @@ public class LeadFilterScheduler extends BaseService {
 
     @Scheduled(fixedDelay = 10000)
     public void filterLead() throws TMSException {
-        logger.info("filter lead");
         // Get Data To Process
         List<ClBasket> clBaskets = clBasketService.getListToFilterProcess(sessionId);
         if (clBaskets.size() == 0) {

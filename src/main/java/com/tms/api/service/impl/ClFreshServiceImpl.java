@@ -20,10 +20,7 @@ import com.tms.dto.request.ClFreshGetLead.SetLeadStatus;
 import com.tms.dto.request.ClFreshGetLead.SoSaleOderInsert;
 import com.tms.dto.request.clCallback.DelClCallback;
 import com.tms.dto.request.clCallback.InsClCallback;
-import com.tms.dto.request.clFresh.InsClFresh;
-import com.tms.dto.request.clFresh.InsClFreshsQuery;
-import com.tms.dto.request.clFresh.UpdClFresh;
-import com.tms.dto.request.clFresh.UpdClFreshs;
+import com.tms.dto.request.clFresh.*;
 import com.tms.dto.response.GetLeadForAgentDto;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -162,6 +159,15 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
             handleApproved(setLeadStatus);
         }
 
+        return true;
+    }
+
+    @Override
+    public boolean updDayCallAfter24Hour() throws TMSException {
+        DBResponse<String> dbResponse  = clFreshDao.updClFreshDayCallAfter24Hour(sessionId,new UpdDayCallAfter24Hour());
+        if (dbResponse.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
+            throw new TMSDbException(dbResponse.getErrorMsg());
+        }
         return true;
     }
 
