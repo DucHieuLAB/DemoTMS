@@ -62,7 +62,7 @@ public class ValidateSoServiceImpl extends BaseService implements ValidateSoServ
 
         if (firstSaleOrder.getStatus() == EnumType.SaleOrder.DELAY.getStatus()) {
             if (status != EnumType.SaleOrder.CANCEL.getStatus() && status != EnumType.SaleOrder.UNASIGNE.getStatus()) {
-                throw new TMSDbException(MessageConst.ERROR_CANNOT_CHANGE_STATUS_DELAY);
+                createAndThrowException(STAUS,validSaleOrder.getUpdSaleOrder().getStatus(),MessageConst.ERROR_CANNOT_CHANGE_STATUS_DELAY);
             }
         }
         //Khi SO set về trạng thái Unassigned sẽ tự động tạo ra 1 SO mới với trạng thái new
@@ -75,6 +75,7 @@ public class ValidateSoServiceImpl extends BaseService implements ValidateSoServ
             // Insert sale order
             InsSaleOrder insSaleOrder = SaleOrderConverter.convertSaleOrderToInsSaleOrder(firstSaleOrder);
             insSaleOrder.setStatus(EnumType.SaleOrder.NEW.getStatus());
+            insSaleOrder.setSoId(null);
             InsSaleOrderQuery insSaleOrderQuery = new InsSaleOrderQuery();
             String query = "VALUES ";
             query = query + insSaleOrder.toString();
