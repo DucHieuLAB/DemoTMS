@@ -5,13 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClBasket {
+public class ClBasket implements Serializable {
     private Integer leadId;
     private Integer agcId;
     private String agcCode;

@@ -46,7 +46,6 @@ public class ClFreshConverter {
             insClFresh.setCustomerEmail(clBasket.getCustomerEmail());
             insClFresh.setCustomerComment(clBasket.getCustomerComment());
             insClFresh.setIn_agc_offer_id(clBasket.getIn_agc_offer_id());
-            insClFresh.setCreateDate(DateHelper.toDateTime(clBasket.getCreate_date()));
             insClFresh.setTrackerId(clBasket.getTrackerId());
             insClFresh.setIpAddress(clBasket.getIpAddress());
             insClFreshList.add(insClFresh);

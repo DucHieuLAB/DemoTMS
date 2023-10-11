@@ -8,6 +8,7 @@ import com.tms.dto.request.ClFreshGetLead.SoSaleOderInsert;
 import com.tms.dto.request.clCallback.UpdClCallback;
 import com.tms.dto.request.clFresh.InsClFreshsQuery;
 import com.tms.dto.request.clFresh.UpdClFreshs;
+import com.tms.dto.request.clFresh.UpdDayCallAfter24Hour;
 import com.tms.dto.response.GetLeadForAgentDto;
 
 import java.util.List;
@@ -38,12 +39,18 @@ public class ClFreshDao extends BaseDao {
 
     private static final String GET_LEAD_BY_ID = "get_lead_by_id";
 
+    private static final String UPD_DAYCALL_AFTER_24_HOUR = "upd_daycall_after_24_hour";
+
     public DBResponse<String> insClFresh(String sessionId, InsClFreshsQuery params) {
         return this.dbInsOrUpd(sessionId, INS_CL_FRESHS_QUERY, params);
     }
 
     public DBResponse<String> updClFresh(String sessionId, UpdClFreshs params) {
         return this.dbInsOrUpd(sessionId, UPD_CL_FRESHS, params);
+    }
+
+    public DBResponse<String> updClFreshDayCallAfter24Hour(String sessionId, UpdDayCallAfter24Hour params) {
+        return this.dbInsOrUpd(sessionId, UPD_DAYCALL_AFTER_24_HOUR, params);
     }
 
     public DBResponse<List<GetLeadForAgentDto>> getLeadForAgentUrgent(String sessionId, GetLeadfor params) {

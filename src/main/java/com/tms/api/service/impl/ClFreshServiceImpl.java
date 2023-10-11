@@ -23,10 +23,7 @@ import com.tms.dto.request.ClFreshGetLead.SetLeadStatus;
 import com.tms.dto.request.ClFreshGetLead.SoSaleOderInsert;
 import com.tms.dto.request.clCallback.DelClCallback;
 import com.tms.dto.request.clCallback.InsClCallback;
-import com.tms.dto.request.clFresh.InsClFresh;
-import com.tms.dto.request.clFresh.InsClFreshsQuery;
-import com.tms.dto.request.clFresh.UpdClFresh;
-import com.tms.dto.request.clFresh.UpdClFreshs;
+import com.tms.dto.request.clFresh.*;
 import com.tms.dto.response.GetLeadForAgentDto;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -36,7 +33,6 @@ import org.springframework.util.CollectionUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.InputMismatchException;
 import java.util.List;
 
 @Service
@@ -129,6 +125,8 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
         SetLeadFresh setLeadFresh = new SetLeadFresh();
         setLeadFresh.setAssigned(getLeadfor.getAgentId());
         setLeadFresh.setAgentHold(getLeadfor.getAgentId());
+        setLeadFresh.setDayCall(result.getResult().get(0).getDayCall()+1);
+        setLeadFresh.setTotalCall(result.getResult().get(0).getTotalCall()+1);
         setLeadFresh.setLeadId(result.getResult().get(0).getLeadId());
 
         DBResponse<String> setLead = clFreshDao.setlead(sessionId, setLeadFresh);
@@ -168,6 +166,15 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
         return true;
     }
 
+    @Override
+    public boolean updDayCallAfter24Hour() throws TMSException {
+        DBResponse<String> dbResponse  = clFreshDao.updClFreshDayCallAfter24Hour(sessionId,new UpdDayCallAfter24Hour());
+        if (dbResponse.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
+            throw new TMSDbException(dbResponse.getErrorMsg());
+        }
+        return true;
+    }
+
     private void validateStatus(SetLeadStatus setLeadStatus) throws TMSInvalidInputException {
         int[] validStatuses = {EnumType.LeadStatus.TRASH.getStatus(),
                 EnumType.LeadStatus.REJECTED.getStatus(),
@@ -188,7 +195,7 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
         SetLeadFresh setLeadFresh = new SetLeadFresh();
         PropertyUtils.copyProperties(setLeadFresh, setLeadStatus.getSetLeadFresh());
 
-        if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty()) {
+        if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty() || setLeadStatus.getSetLeadFresh().getFcrReason() ==null ) {
             String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" Reason:"+setLeadStatus.getSetLeadFresh().getFcrReason());
             throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
