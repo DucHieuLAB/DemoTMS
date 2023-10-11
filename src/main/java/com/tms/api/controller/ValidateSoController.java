@@ -24,7 +24,7 @@ public class ValidateSoController {
 
     @PutMapping("")
     public TMSResponse<Boolean> validateSo(@Valid @RequestBody ValidSaleOrder validSaleOrder) throws TMSException {
-        validate(validSaleOrder);
+         validate(validSaleOrder);
         boolean result = validateSoService.validSaleOrder(validSaleOrder);
         return TMSResponse.buildResponse(result);
     }

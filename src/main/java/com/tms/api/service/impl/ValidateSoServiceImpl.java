@@ -1,9 +1,12 @@
 package com.tms.api.service.impl;
 
+import com.tms.api.commons.ApiValidatorError;
 import com.tms.api.consts.EnumType;
 import com.tms.api.consts.MessageConst;
+import com.tms.api.exception.ErrorMessages;
 import com.tms.api.exception.TMSDbException;
 import com.tms.api.exception.TMSException;
+import com.tms.api.exception.TMSInvalidInputException;
 import com.tms.api.helper.SaleOrderConverter;
 import com.tms.api.service.*;
 import com.tms.dto.request.odDoNew.InsDeliveryOrder;
@@ -23,6 +26,8 @@ public class ValidateSoServiceImpl extends BaseService implements ValidateSoServ
 
     private final DeliveryOrderService deliveryOrderService;
 
+    private final static String STAUS = "status";
+
     public ValidateSoServiceImpl(SaleOrderService saleOrderService, ClFreshService clFreshService, DeliveryOrderService deliveryOrderService) {
         this.saleOrderService = saleOrderService;
         this.clFreshService = clFreshService;
@@ -41,20 +46,20 @@ public class ValidateSoServiceImpl extends BaseService implements ValidateSoServ
         SaleOrder firstSaleOrder = saleOrders.get(0);
 
         if (firstSaleOrder.getStatus() == EnumType.SaleOrder.CANCEL.getStatus() && status == EnumType.SaleOrder.PENDING.getStatus()) {
-            throw new TMSDbException(MessageConst.UNABLE_TO_CHANGE_STATUS_CANCEL_TO_PENDING);
+            createAndThrowException(STAUS, validSaleOrder.getUpdSaleOrder().getStatus(), MessageConst.UNABLE_TO_CHANGE_STATUS_CANCEL_TO_PENDING);
         }
 
         //Những SO sau khi đã Validated chỉ có thể chuyển về trạng thái Unassigned
         if (firstSaleOrder.getStatus() == EnumType.SaleOrder.VALIDATED.getStatus()) {
             if (status == EnumType.SaleOrder.CANCEL.getStatus()) {
-                throw new TMSDbException(MessageConst.UNABLE_TO_CHANGE_STATUS_VALIDATE_TO_CANCEL_PENDING);
+                createAndThrowException(STAUS, validSaleOrder.getUpdSaleOrder().getStatus(), MessageConst.UNABLE_TO_CHANGE_STATUS_VALIDATE_TO_CANCEL_PENDING);
             }
 
             if (status != EnumType.SaleOrder.UNASIGNE.getStatus()) {
-                throw new TMSDbException(MessageConst.STATUS_RESTRICTION_VALIDATE);
+                createAndThrowException(STAUS, validSaleOrder.getUpdSaleOrder().getStatus(), MessageConst.STATUS_RESTRICTION_VALIDATE);
             }
-
         }
+
         if (firstSaleOrder.getStatus() == EnumType.SaleOrder.DELAY.getStatus()) {
             if (status != EnumType.SaleOrder.CANCEL.getStatus() && status != EnumType.SaleOrder.UNASIGNE.getStatus()) {
                 throw new TMSDbException(MessageConst.ERROR_CANNOT_CHANGE_STATUS_DELAY);
@@ -130,5 +135,13 @@ public class ValidateSoServiceImpl extends BaseService implements ValidateSoServ
             }
 
         }
+    }
+
+    private void createAndThrowException(String fieldName, Object rejectValue, String message) throws TMSException {
+        ApiValidatorError validatorError = ApiValidatorError.builder().field(fieldName)
+                .rejectValue(rejectValue)
+                .message(message)
+                .build();
+        throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, validatorError);
     }
 }

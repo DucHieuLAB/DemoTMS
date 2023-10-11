@@ -60,6 +60,9 @@ public class LeadFilterScheduler extends BaseService {
         if (CampaignInfos.campaignInfList.size() == 0) {
             CampaignInfos.campaignInfList = campaignService.getCampainInfs(EnumType.Campaign.CALLING_LIST.getType());
         }
+        if (DuplicateLeadChecker.isEmpty()){
+            DuplicateLeadChecker.loadCacheFromFile();
+        }
         List<CfBlackList> blackLists = BlackLists.blackLists;
         List<CampaignInf> campaignInfs = CampaignInfos.campaignInfList;
         // Sort by create time for check duplicate
@@ -119,6 +122,7 @@ public class LeadFilterScheduler extends BaseService {
             }
             DuplicateLeadChecker.addRecord(basket);
         }
+        DuplicateLeadChecker.saveCacheToFile();
     }
 
     private boolean isInBlackList(ClBasket basket, List<CfBlackList> blackLists) {
