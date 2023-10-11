@@ -1,12 +1,15 @@
 package com.tms.api.service.impl;
 
 
+import com.tms.api.commons.ApiMessageError;
 import com.tms.api.consts.EnumType;
+import com.tms.api.consts.MessageConst;
 import com.tms.api.consts.EnumType.DbStatusResp;
 import com.tms.api.exception.ErrorMessages;
 import com.tms.api.exception.TMSDbException;
 import com.tms.api.exception.TMSEntityNotFoundException;
 import com.tms.api.exception.TMSException;
+import com.tms.api.exception.TMSInvalidInputException;
 import com.tms.api.helper.Helper;
 import com.tms.api.service.BaseService;
 import com.tms.api.service.ClFreshService;
@@ -171,7 +174,16 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
         return true;
     }
 
-    private void validateStatus(SetLeadStatus setLeadStatus) {
+    @Override
+    public boolean updDayCallAfter24Hour() throws TMSException {
+        DBResponse<String> dbResponse  = clFreshDao.updClFreshDayCallAfter24Hour(sessionId,new UpdDayCallAfter24Hour());
+        if (dbResponse.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
+            throw new TMSDbException(dbResponse.getErrorMsg());
+        }
+        return true;
+    }
+
+    private void validateStatus(SetLeadStatus setLeadStatus) throws TMSInvalidInputException {
         int[] validStatuses = {EnumType.LeadStatus.TRASH.getStatus(),
                 EnumType.LeadStatus.REJECTED.getStatus(),
                 EnumType.LeadStatus.BUSY.getStatus(),
@@ -182,7 +194,8 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
                 EnumType.LeadStatus.CALLBACKPOTENTIAL.getStatus(),
                 EnumType.LeadStatus.APPROVED.getStatus()};
         if (Arrays.stream(validStatuses).noneMatch(status -> status == setLeadStatus.getSetLeadFresh().getLeadStatus())) {
-            throw new InputMismatchException("Not added to status yet");
+            String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION + Helper.toJson("status :"+setLeadStatus.getSetLeadFresh().getLeadStatus());
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
     }
 
@@ -191,7 +204,8 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
         PropertyUtils.copyProperties(setLeadFresh, setLeadStatus.getSetLeadFresh());
 
         if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty()) {
-            throw new InputMismatchException("No reason has been added for the above status");
+            String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" Reason:"+setLeadStatus.getSetLeadFresh().getFcrReason());
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
 
         DBResponse<String> setLead = clFreshDao.setlead(sessionId, setLeadFresh);
@@ -215,11 +229,13 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
         SetLeadFresh setLeadFresh = new SetLeadFresh();
         PropertyUtils.copyProperties(setLeadFresh, setLeadStatus.getSetLeadFresh());
         if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty()) {
-            throw new InputMismatchException("No reason has been added for the above status");
+             String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" Reason:"+setLeadStatus.getSetLeadFresh().getFcrReason());
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
 
         if (setLeadStatus.getInsClCallback().getRequestTime().isEmpty()) {
-            throw new InputMismatchException("Callback time for status has not been added");
+             String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" RequestTime:"+setLeadStatus.getInsClCallback().getRequestTime());
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
         InsClCallback insClCallback = new InsClCallback();
         PropertyUtils.copyProperties(insClCallback, setLeadStatus.getInsClCallback());
@@ -242,18 +258,22 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
 
     private void handleApproved(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         if (setLeadStatus.getSetLeadFresh().getAddress().isEmpty() || setLeadStatus.getSetLeadFresh().getAddress() == null) {
-            throw new InputMismatchException("No address has been entered for the status");
+           String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" address:"+setLeadStatus.getSetLeadFresh().getAddress());
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
 
         if (setLeadStatus.getSoSaleOderInsert().getLeadPhone().isEmpty() || setLeadStatus.getSoSaleOderInsert().getLeadPhone() == null) {
-            throw new InputMismatchException("No phone has been entered for the status");
+             String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" Phone:"+setLeadStatus.getSoSaleOderInsert().getLeadPhone());
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
 
         if (setLeadStatus.getSetLeadFresh().getProdId() == null) {
-            throw new InputMismatchException("No product has been entered for the status");
+             String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" ProdID:"+setLeadStatus.getSetLeadFresh().getProdId() );
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
         if (setLeadStatus.getSoSaleOderInsert().getPaymentMethod() == null) {
-            throw new InputMismatchException("No payment method has been entered for the status");
+            String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" PaymentMethod:"+setLeadStatus.getSoSaleOderInsert().getPaymentMethod());
+            throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
 
         SetLeadFresh setLeadFresh = new SetLeadFresh();
