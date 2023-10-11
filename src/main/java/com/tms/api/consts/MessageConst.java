@@ -16,4 +16,8 @@ public class MessageConst {
     public static final String STATUS_RESTRICTION_VALIDATE = "Status Change Restriction: Sale Orders that have been marked as 'Validated' can only be transitioned to the 'Unassigned' status";
     public static final String ERROR_CANNOT_CHANGE_STATUS_DELAY = "Status Change Not Allowed: Sale Orders with 'Delay' status can only be transitioned to 'Cancel' or 'Unassigned' status. To make changes, please choose one of these valid statuses.";
     public static final String ERROR_MESSAGE_VALIDATED_DELAY_CREATION_DATE_REQUIRED = "VALIDATED and DELAY statuses require a valid creation date.";
+    public static final String ERROR_MESSAGE_INFORMATION_NULL = "Haven't entered all the necessary information:";
+    public static final String ERROR_MESSAGE_INFORMATION = "The information entered is invalid";
+
+
 }
