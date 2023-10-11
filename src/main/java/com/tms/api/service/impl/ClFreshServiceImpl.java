@@ -166,6 +166,7 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
         return true;
     }
 
+<<<<<<< HEAD
     @Override
     public boolean updDayCallAfter24Hour() throws TMSException {
         DBResponse<String> dbResponse  = clFreshDao.updClFreshDayCallAfter24Hour(sessionId,new UpdDayCallAfter24Hour());
@@ -176,6 +177,9 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
     }
 
     private void validateStatus(SetLeadStatus setLeadStatus) throws TMSInvalidInputException {
+=======
+    private void validateStatus(SetLeadStatus setLeadStatus) throws TMSException {
+>>>>>>> L3/TruongNV
         int[] validStatuses = {EnumType.LeadStatus.TRASH.getStatus(),
                 EnumType.LeadStatus.REJECTED.getStatus(),
                 EnumType.LeadStatus.BUSY.getStatus(),
@@ -195,7 +199,11 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
         SetLeadFresh setLeadFresh = new SetLeadFresh();
         PropertyUtils.copyProperties(setLeadFresh, setLeadStatus.getSetLeadFresh());
 
+<<<<<<< HEAD
         if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty() || setLeadStatus.getSetLeadFresh().getFcrReason() ==null ) {
+=======
+        if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty() || setLeadStatus.getSetLeadFresh().getFcrReason() == null) {
+>>>>>>> L3/TruongNV
             String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" Reason:"+setLeadStatus.getSetLeadFresh().getFcrReason());
             throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
@@ -210,6 +218,9 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
     private void handleBusyNoAnswerUnreachable(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         SetLeadFresh setLeadFresh = new SetLeadFresh();
         PropertyUtils.copyProperties(setLeadFresh, setLeadStatus.getSetLeadFresh());
+        setLeadFresh.setDayCall(setLeadStatus.getSetLeadFresh().getDayCall()+1);
+        setLeadFresh.setTotalCall(setLeadStatus.getSetLeadFresh().getTotalCall()+1);
+
         DBResponse<String> setLead = clFreshDao.setlead(sessionId, setLeadFresh);
 
         if (setLead.getErrorCode() != DbStatusResp.SUCCESS.getStatus()) {
@@ -220,12 +231,12 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
     private void handleCallBack(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         SetLeadFresh setLeadFresh = new SetLeadFresh();
         PropertyUtils.copyProperties(setLeadFresh, setLeadStatus.getSetLeadFresh());
-        if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty()) {
+        if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty() || setLeadStatus.getSetLeadFresh().getFcrReason() == null) {
              String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" Reason:"+setLeadStatus.getSetLeadFresh().getFcrReason());
             throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
 
-        if (setLeadStatus.getInsClCallback().getRequestTime().isEmpty()) {
+        if (setLeadStatus.getInsClCallback().getRequestTime().isEmpty() || setLeadStatus.getInsClCallback().getRequestTime() == null) {
              String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" RequestTime:"+setLeadStatus.getInsClCallback().getRequestTime());
             throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
