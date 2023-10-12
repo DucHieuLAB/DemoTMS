@@ -195,7 +195,7 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
         SetLeadFresh setLeadFresh = new SetLeadFresh();
         PropertyUtils.copyProperties(setLeadFresh, setLeadStatus.getSetLeadFresh());
 
-        if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty() || setLeadStatus.getSetLeadFresh().getFcrReason() ==null ) {
+        if (setLeadStatus.getSetLeadFresh().getFcrReason() ==null || setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty() ) {
             String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" Reason:"+setLeadStatus.getSetLeadFresh().getFcrReason());
             throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
@@ -220,7 +220,7 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
     private void handleCallBack(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         SetLeadFresh setLeadFresh = new SetLeadFresh();
         PropertyUtils.copyProperties(setLeadFresh, setLeadStatus.getSetLeadFresh());
-        if (setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty()) {
+        if (setLeadStatus.getSetLeadFresh().getFcrReason() == null || setLeadStatus.getSetLeadFresh().getFcrReason().isEmpty()) {
              String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" Reason:"+setLeadStatus.getSetLeadFresh().getFcrReason());
             throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE,new ApiMessageError(errorMessage));
         }
@@ -251,7 +251,7 @@ public class ClFreshServiceImpl extends BaseService implements ClFreshService {
     }
 
     private void handleApproved(SetLeadStatus setLeadStatus) throws TMSException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-        if (setLeadStatus.getSetLeadFresh().getAddress().isEmpty() || setLeadStatus.getSetLeadFresh().getAddress() == null) {
+        if (setLeadStatus.getSetLeadFresh().getAddress() == null || setLeadStatus.getSetLeadFresh().getAddress().isEmpty()) {
             String errorMessage = MessageConst.ERROR_MESSAGE_INFORMATION_NULL + Helper.toJson(" address:" + setLeadStatus.getSetLeadFresh().getAddress());
             throw new TMSInvalidInputException(ErrorMessages.INVALID_VALUE, new ApiMessageError(errorMessage));
         }
