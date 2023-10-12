@@ -32,8 +32,10 @@ public class ValidateSoController {
     private void validate(ValidSaleOrder validSaleOrder) throws TMSException {
         int status = validSaleOrder.getUpdSaleOrder().getStatus();
         String reason = validSaleOrder.getUpdSaleOrder().getReason();
-        boolean isUpdateProduct = validSaleOrder.getIsUpdateProduct();
-
+        boolean isUpdateProduct = false;
+        if (validSaleOrder.getIsUpdateProduct() != null){
+            isUpdateProduct = validSaleOrder.getIsUpdateProduct();
+        }
         if (!EnumType.SaleOrder.isStatusInEnum(status)) {
             createAndThrowException("status", status, MessageConst.SO_INVALID_STATUS);
         }

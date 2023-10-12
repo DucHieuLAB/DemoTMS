@@ -26,7 +26,10 @@ public class ValidateSoServiceImpl extends BaseService implements ValidateSoServ
 
     private final DeliveryOrderService deliveryOrderService;
 
-    private final static String STAUS = "status";
+    private final static String STATUS = "status";
+    private final static int LIMIT_ONE = 1;
+    private final static int OFFSET_ZERO = 0;
+    private final static int GET_FIRST_INDEX = 0;
 
     public ValidateSoServiceImpl(SaleOrderService saleOrderService, ClFreshService clFreshService, DeliveryOrderService deliveryOrderService) {
         this.saleOrderService = saleOrderService;
@@ -39,30 +42,26 @@ public class ValidateSoServiceImpl extends BaseService implements ValidateSoServ
         int status = validSaleOrder.getUpdSaleOrder().getStatus();
         GetSaleOrderById getSaleOrderById = new GetSaleOrderById();
         getSaleOrderById.setSoId(validSaleOrder.getUpdSaleOrder().getSoId());
-        getSaleOrderById.setLimit(1000);
-        getSaleOrderById.setOffset(0);
+        getSaleOrderById.setLimit(LIMIT_ONE);
+        getSaleOrderById.setOffset(OFFSET_ZERO);
         List<SaleOrder> saleOrders = saleOrderService.getSaleOrderById(getSaleOrderById);
 
-        SaleOrder firstSaleOrder = saleOrders.get(0);
+        SaleOrder oldSaleOrder = saleOrders.get(GET_FIRST_INDEX);
 
-        if (firstSaleOrder.getStatus() == EnumType.SaleOrder.CANCEL.getStatus() && status == EnumType.SaleOrder.PENDING.getStatus()) {
-            createAndThrowException(STAUS, validSaleOrder.getUpdSaleOrder().getStatus(), MessageConst.UNABLE_TO_CHANGE_STATUS_CANCEL_TO_PENDING);
+        if (oldSaleOrder.getStatus() == EnumType.SaleOrder.CANCEL.getStatus() && status == EnumType.SaleOrder.PENDING.getStatus()) {
+            createAndThrowException(STATUS, validSaleOrder.getUpdSaleOrder().getStatus(), MessageConst.UNABLE_TO_CHANGE_STATUS_CANCEL_TO_PENDING);
         }
 
         //Những SO sau khi đã Validated chỉ có thể chuyển về trạng thái Unassigned
-        if (firstSaleOrder.getStatus() == EnumType.SaleOrder.VALIDATED.getStatus()) {
-            if (status == EnumType.SaleOrder.CANCEL.getStatus()) {
-                createAndThrowException(STAUS, validSaleOrder.getUpdSaleOrder().getStatus(), MessageConst.UNABLE_TO_CHANGE_STATUS_VALIDATE_TO_CANCEL_PENDING);
-            }
-
+        if (oldSaleOrder.getStatus() == EnumType.SaleOrder.VALIDATED.getStatus()) {
             if (status != EnumType.SaleOrder.UNASIGNE.getStatus()) {
-                createAndThrowException(STAUS, validSaleOrder.getUpdSaleOrder().getStatus(), MessageConst.STATUS_RESTRICTION_VALIDATE);
+                createAndThrowException(STATUS, validSaleOrder.getUpdSaleOrder().getStatus(), MessageConst.STATUS_RESTRICTION_VALIDATE);
             }
         }
 
-        if (firstSaleOrder.getStatus() == EnumType.SaleOrder.DELAY.getStatus()) {
+        if (oldSaleOrder.getStatus() == EnumType.SaleOrder.DELAY.getStatus()) {
             if (status != EnumType.SaleOrder.CANCEL.getStatus() && status != EnumType.SaleOrder.UNASIGNE.getStatus()) {
-                createAndThrowException(STAUS,validSaleOrder.getUpdSaleOrder().getStatus(),MessageConst.ERROR_CANNOT_CHANGE_STATUS_DELAY);
+                createAndThrowException(STATUS,validSaleOrder.getUpdSaleOrder().getStatus(),MessageConst.ERROR_CANNOT_CHANGE_STATUS_DELAY);
             }
         }
         //Khi SO set về trạng thái Unassigned sẽ tự động tạo ra 1 SO mới với trạng thái new
@@ -71,9 +70,9 @@ public class ValidateSoServiceImpl extends BaseService implements ValidateSoServ
             validSaleOrder.getUpdSaleOrder().setStatus(EnumType.SaleOrder.UNASIGNE.getStatus());
             // Cập nhât các trường mới vào new SO
             SaleOrder udpSaleOrder = SaleOrderConverter.convertToSaleOrder(validSaleOrder.getUpdSaleOrder());
-            mergeNonNullFields(firstSaleOrder, udpSaleOrder);
+            mergeNonNullFields(oldSaleOrder, udpSaleOrder);
             // Insert sale order
-            InsSaleOrder insSaleOrder = SaleOrderConverter.convertSaleOrderToInsSaleOrder(firstSaleOrder);
+            InsSaleOrder insSaleOrder = SaleOrderConverter.convertSaleOrderToInsSaleOrder(oldSaleOrder);
             insSaleOrder.setStatus(EnumType.SaleOrder.NEW.getStatus());
             insSaleOrder.setSoId(null);
             InsSaleOrderQuery insSaleOrderQuery = new InsSaleOrderQuery();
